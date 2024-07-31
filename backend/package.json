@@ -1,0 +1,23 @@
+{
+  "name": "atlas-backend",
+  "version": "1.0.0",
+  "description": "the server for all atlas api",
+  "main": "index.js",
+  "scripts": {
+  "start": "node src/server.js",
+  "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migrate": "prisma migrate"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.5.4"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "nodemon": "^3.1.4"
+  }
+}
