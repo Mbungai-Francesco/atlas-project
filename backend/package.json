@@ -2,12 +2,12 @@
   "name": "atlas-backend",
   "version": "1.0.0",
   "description": "the server for all atlas api",
-  "main": "index.js",
+  "main": "src/server.ts",
   "scripts": {
-  "start": "node src/server.js",
+  "start": " nodemon tsc && node dist/server.js",
   "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "migrate": "prisma migrate"
+    "migrate": "prisma migrate dev"
   },
   "author": "",
   "license": "ISC",
