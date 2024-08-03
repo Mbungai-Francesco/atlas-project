@@ -2,6 +2,7 @@ import express, {Request,Response} from 'express';
 require('dotenv').config()
 require('../routes/UserRoutes')
 import UserRoutes from '../routes/UserRoutes'
+import TeacherRoutes from "../routes/TeacherRoutes"
 
 
 
@@ -15,7 +16,8 @@ app.get('/', (req:Request, res:Response) =>{
 
 })
 
-app.use(UserRoutes)
+app.use(UserRoutes,TeacherRoutes)
+// app.use(UserRoutes,TeacherRoutes, /**.Routes */)
 
 
 
