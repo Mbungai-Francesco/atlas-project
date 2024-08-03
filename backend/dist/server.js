@@ -7,7 +7,7 @@ const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const port = 3000;
 app.get('/', (req, res) => {
-    res.send('Hello + Node.js + Express! with typscript');
+    res.send('Hello + Node.js + Express! with typscript and some updates');
 });
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
