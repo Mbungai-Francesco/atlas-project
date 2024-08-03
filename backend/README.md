@@ -1,7 +1,9 @@
-## Atlas backend Project
+## Atlas Backend Project
 
-## Intructions for local hosting of the backend
+### Instructions for Local Hosting of the Backend
 
-To run the development environment run the script `npm run dev`\n
-To make the project ready to deploy in the distribution folder run `npm build`\n
-To run the ready-to-deploy folder run `npm start`\n
+To run the development environment, run the script `npm run dev`.
+
+To prepare the project for deployment, run the script `npm build`.
+
+To run the production-ready build, execute the script `npm start`.
