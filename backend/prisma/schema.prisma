@@ -9,6 +9,33 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
+
 }
+
+enum UserType{
+  ADMIN
+  TEACHER
+  STUDENT
+}
+
+
+
+
+
+model User{
+  id       String  @id @map("_id") @default(auto()) @db.ObjectId
+  username String @unique
+  firstname String?
+  secondname String?
+  email   String @unique
+  usertype UserType @default(STUDENT)
+  clerkId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+
+
