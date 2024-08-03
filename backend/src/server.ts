@@ -1,13 +1,27 @@
-import express, { Request, Response } from 'express';
+import express, {Request,Response} from 'express';
+require('dotenv').config()
+require('../routes/UserRoutes')
+import UserRoutes from '../routes/UserRoutes'
 
-const app = express();
 
-const port = 3000;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello + Node.js + Express! with typscript and some updates');
-});
+const app = express()
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+app.use(express.json())
+
+app.get('/', (req:Request, res:Response) =>{
+
+  res.send("hello coming from the atlas landing page")
+
+})
+
+app.use(UserRoutes)
+
+
+
+
+app.listen(5000, () => {
+  console.log('server running on port 500')
+})
+
+

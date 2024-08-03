@@ -4,7 +4,6 @@
   "description": "the server for all atlas api",
   "main": "src/server.ts",
   "scripts": {
-
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "start": "node dist/server.js",
     "build": "tsc",
@@ -21,6 +20,8 @@
   },
   "dependencies": {
     "@prisma/client": "^5.17.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "nodemon": "^3.1.4"
   }
