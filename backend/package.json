@@ -4,12 +4,9 @@
   "description": "the server for all atlas api",
   "main": "src/server.ts",
   "scripts": {
-<<<<<<< HEAD
-    "start": " nodemon tsc && node dist/server.js",
-=======
+
     "dev": "nodemon --watch src --exec ts-node src/server.ts",
     "start": "node dist/server.js",
->>>>>>> c6d7fb2b4937132d61f28fa81ee5e3949a42b99f
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate": "prisma migrate dev"
