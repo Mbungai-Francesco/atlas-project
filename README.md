@@ -14,7 +14,7 @@ Before running the API, make sure you have the following installed:
 1. Clone this repository:
 
     ```bash
-    git clone https://github.com/your-username/atlas-backend.git
+    git clone https://github.com/skaleway/atlas-project.git
     ```
 
 2. Install the dependencies:
@@ -32,8 +32,8 @@ Before running the API, make sure you have the following installed:
 
       ```plaintext
       DATABASE_URL=your-mongodb-uri
-      NB => check the .env.example
       ```
+      - NB => check the .env.example
 
 4. Start the API:
 
@@ -43,7 +43,7 @@ Before running the API, make sure you have the following installed:
 
 ## API Documentation
 
-The API documentation can be found [here](https://your-api-documentation-url).
+The API documentation can be found [here](https://your-api-documentation-coming-soon).
 
 ## Contributing
 
