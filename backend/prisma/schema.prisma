@@ -16,8 +16,14 @@ datasource db {
 
 enum UserType{
   ADMIN
-  TEACHER
   STUDENT
+}
+
+enum classRoomContentType{
+  PDF
+  WORD
+  VIDEO
+  AUDIO
 }
 
 
@@ -29,13 +35,52 @@ model User{
   username String @unique
   firstname String?
   secondname String?
+  class String?
+  age Int?
   email   String @unique
   usertype UserType @default(STUDENT)
   clerkId String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
+
+model Teacher {
+  id       String  @id @map("_id") @default(auto()) @db.ObjectId
+  name String
+  email   String @unique
+  username String @unique
+  firstname String?
+  secondname String?
+  clerkId String @unique
+  teachchingsubject String
+  teachermatriculationId String @unique // this will be used in future to validate teachers
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  classRoom ClassRoom[]
+}
+
+
+model ClassRoom{
+  id       String  @id @map("_id") @default(auto()) @db.ObjectId
+  name String
+  teacherId String @db.ObjectId
+  teacher Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  classRoomContent classRoomContent[]
+}
+
+
+model classRoomContent{
+  id       String  @id @map("_id") @default(auto()) @db.ObjectId
+  classRoomId String @db.ObjectId
+  classRoom ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+  contenttpye classRoomContentType @default(PDF)
+  content String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 
