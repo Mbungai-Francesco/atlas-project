@@ -8,47 +8,49 @@ datasource db {
 }
 
 model User {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
-  email      String     @unique
-  name       String
-  role       Role
-  notes      Note[]     @relation("UserNotes")
-  classrooms Classroom[] @relation("TeacherClassrooms")
-  quizzes    Quiz[]     @relation("TeacherQuizzes")
-  attempts   Attempt[]  @relation("UserAttempts")
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  email       String   @unique
+  name        String
+  role        Role
+  notes       Note[]   @relation("UserNotes")
+  classrooms  Classroom[] @relation("TeacherClassrooms")
+  classroomId String? @db.ObjectId
+  studentClassrooms Classroom? @relation("StudentClassrooms", fields: [classroomId], references: [id])
+  quizzes     Quiz[]   @relation("TeacherQuizzes")
+  attempts    Attempt[] @relation("StudentAttempts")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Note {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  content     String
-  subject     String
-  grade       String
-  topic       String
-  teacherId   String    @db.ObjectId
-  teacher     User      @relation("UserNotes", fields: [teacherId], references: [id])
-  classroomId String?   @db.ObjectId
-  classroom   Classroom? @relation(fields: [classroomId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  content    String
+  subject    String
+  grade      String
+  topic      String
+  teacherId  String  @db.ObjectId
+  teacher    User     @relation("UserNotes", fields: [teacherId], references: [id])
+  classroom  Classroom? @relation(fields: [classroomId], references: [id])
+  classroomId String? @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Quiz {
-  id          String       @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  subject     String
-  grade       String
-  topic       String
-  questions   QuizQuestion[]
-  teacherId   String      @db.ObjectId
-  teacher     User         @relation("TeacherQuizzes", fields: [teacherId], references: [id])
-  attempts    Attempt[]
-  classroomId String?      @db.ObjectId
-  classroom   Classroom?   @relation(fields: [classroomId], references: [id])
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  title      String
+  subject    String
+  grade      String
+  topic      String
+  questions  QuizQuestion[]
+  teacherId  String      @db.ObjectId
+  teacher    User         @relation("TeacherQuizzes", fields: [teacherId], references: [id])
+  attempts   Attempt[]
+  classroom  Classroom?   @relation(fields: [classroomId], references: [id])
+  classroomId String? @db.ObjectId
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 model QuizQuestion {
@@ -65,10 +67,10 @@ model QuizQuestion {
 model Attempt {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   score      Int
-  quizId     String   @db.ObjectId
+  quizId     String @db.ObjectId
   quiz       Quiz     @relation(fields: [quizId], references: [id])
-  studentId  String  @db.ObjectId
-  student    User     @relation("UserAttempts", fields: [studentId], references: [id])
+  studentId  String @db.ObjectId
+  student    User     @relation("StudentAttempts", fields: [studentId], references: [id])
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
@@ -77,11 +79,11 @@ model Classroom {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   name       String
   subject    String
-  teacherId  String  @db.ObjectId
-  teacher    User     @relation("TeacherClassrooms", fields: [teacherId], references: [id])
+  teacherId  String @db.ObjectId
+  teacher    User     @relation("TeacherClassrooms", fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   notes      Note[]
   quizzes    Quiz[]
-  students   User[]   @relation("UserClassrooms")
+  students   User[]  @relation("StudentClassrooms")
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 }
