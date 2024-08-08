@@ -1,4 +1,4 @@
-import { About, Home, Student } from "@/pages";
+import { About, Student } from "@/pages";
 import Navbar from "./components/shared/navbar";
 import SearchBar from "./components/ui/searchBar";
 import Profile from "./components/ui/profile";
@@ -11,7 +11,7 @@ const App = () => {
   const [pageSub, setPageSub] = useState("");
 
   return (
-    <div className="flex box-border">
+    <div className="flex box-border font-roboto">
       <Navbar />
       <div className="px-4 py-6 w-full bg-stone-100">
         <div className="flex justify-between">
