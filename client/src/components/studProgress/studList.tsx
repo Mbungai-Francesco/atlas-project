@@ -147,7 +147,7 @@ function StudList() {
 			<div className="w-full overflow-x-scroll">
 				<table className="">
 					<tr className=" text-left font-light text-gray-500 opacity-85 text-sm hover:bg-gray-100">
-						<th className="font-medium pr-4 py-4">Num</th>
+						{/* <th className="font-medium pr-4 py-4">Num</th> */}
 						<th className="font-medium pr-4 py-4">Name</th>
 						<th className="font-medium pr-4 py-4">Grade</th>
 						<th className="font-medium pr-4 py-4">Attendance</th>

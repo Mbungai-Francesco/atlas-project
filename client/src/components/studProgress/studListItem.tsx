@@ -12,9 +12,9 @@ function StudListItem(stud: StudListItemProps) {
   
 	return (
 		<>
-			<td>
+			{/* <td>
 				<p>{stud.number}</p>
-			</td>
+			</td> */}
 			<td className="p-4">
 				<p className="font-medium">{stud.name}</p>
 				<p className="text-gray-400">{stud.email}</p>
