@@ -81,6 +81,14 @@ model classRoomContent{
   content String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
 }
 
-
+model Topic {
+  id       String  @id @map("_id") @default(auto()) @db.ObjectId
+  name String
+  classRoomId String @db.ObjectId
+  classRoom ClassRoom @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
