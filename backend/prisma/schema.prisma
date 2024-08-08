@@ -45,31 +45,31 @@ model User {
 
 // Teacher model
 model Teacher {
-  id                String      @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  email             String      @unique
-  username          String      @unique
+  id                String       @id @default(auto()) @map("_id") @db.ObjectId
+  email             String       @unique
+  username          String       @unique
   firstname         String?
   secondname        String?
-  clerkId           String      @unique
-  teachchingsubject String
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
-  classRoom         ClassRoom[]
+  clerkId           String       @unique
+  teachingsubject   String
+  classroomId       String[]     @db.ObjectId
+  classrooms        ClassRoom[]  @relation(fields: [classroomId], references: [id])
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
 }
 
 // ClassRoom model
 // many students can be in a classroom
 model ClassRoom {
-  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
   name       String
-  studentIds String[]   @db.ObjectId
-  students   User[]     @relation(fields: [studentIds], references: [id])
-  teacherId  String     @db.ObjectId
-  teacher    Teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  studentIds String[]     @db.ObjectId
+  students   User[]       @relation(fields: [studentIds], references: [id])
+  teacherId  String[]     @db.ObjectId
+  teachers   Teacher[]    @relation(fields: [teacherId], references: [id])
   topics     Topic[]
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @updatedAt
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
 }
 
 // TopicContent model (PDF, WORD, VIDEO, AUDIO)
