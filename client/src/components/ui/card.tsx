@@ -5,7 +5,7 @@ interface CardProps {
 function Card({children}: CardProps) {
 	return (
 		<>
-			<div className="border p-4 bg-white rounded-lg">
+			<div className="border py-4 p-6 bg-white rounded-lg min-h-96">
         {children}
       </div>
 		</>

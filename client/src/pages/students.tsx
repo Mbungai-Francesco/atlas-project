@@ -8,6 +8,7 @@ interface StudentProps {
 
 const Student = ({ sub }: StudentProps) => {
 	sub("Student Progress");
+
 	return (
 		<>
 			<div className="grid grid-cols-3">

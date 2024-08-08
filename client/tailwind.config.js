@@ -74,6 +74,9 @@ module.exports = {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
       },
+      height: {
+        'inherit': 'inherit',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
