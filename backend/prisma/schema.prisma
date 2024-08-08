@@ -26,19 +26,21 @@ enum classRoomContentType{
 }
 
 // Student and Admin model
+// a student can be in many classrooms
 model User {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  username   String    @unique
-  firstname  String?
-  secondname String?
-  class      String?
-  age        Int?
-  email      String    @unique
-  attempt    Attempt[]
-  usertype   UserType  @default(STUDENT)
-  clerkId    String?
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  username          String      @unique
+  firstname         String?
+  secondname        String?
+  classroomId       String[]    @db.ObjectId
+  studentclass      ClassRoom[] @relation(fields: [classroomId], references: [id])
+  age               Int?
+  email             String      @unique
+  attempt           Attempt[]
+  usertype          UserType    @default(STUDENT)
+  clerkId           String      @unique
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
 // Teacher model
@@ -57,14 +59,17 @@ model Teacher {
 }
 
 // ClassRoom model
+// many students can be in a classroom
 model ClassRoom {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  teacherId String   @db.ObjectId
-  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
-  topics    Topic[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  name       String
+  studentIds String[]   @db.ObjectId
+  students   User[]     @relation(fields: [studentIds], references: [id])
+  teacherId  String     @db.ObjectId
+  teacher    Teacher    @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  topics     Topic[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 // TopicContent model (PDF, WORD, VIDEO, AUDIO)
