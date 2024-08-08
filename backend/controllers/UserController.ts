@@ -68,26 +68,47 @@ export const GetUsers = async (req: Request, res: Response) => {
   }
 };
 
-export const UpdateUser = async (req: Request, res: Response) => {
+export const GetUser = async (req: Request, res: Response) => {
   try {
-    const { id, username, email, firstname, secondname, classroomId, age } =
-      await req.body;
+    const { id } = req.params;
 
     if (!id) {
       return res.status(400).json({ message: 'id is required' });
     }
 
-    if (!email) {
-      return res.status(400).json({ message: 'email is required' });
+    const getuser = await db.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!getuser) {
+      return res.status(400).json({ message: 'user not found' });
     }
 
-    if (!username) {
-      return res.status(400).json({ message: 'username is required' });
+    return res.status(200).json({ message: 'user found', data: getuser });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'internal server error' });
+  }
+};
+
+export const UpdateUser = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const values = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: 'id is required' });
+    }
+
+    if (!values) {
+      return res.status(400).json({ message: 'values are required' });
     }
 
     const finduser = await db.user.findUnique({
       where: {
-        id,
+        id: id,
       },
     });
 
@@ -100,12 +121,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
         id: id,
       },
       data: {
-        username,
-        email,
-        firstname: firstname ? firstname : finduser?.firstname,
-        secondname: secondname ? secondname : finduser?.secondname,
-        classroomId,
-        age: age ? age : finduser?.age,
+        ...values,
       },
     });
 
@@ -113,36 +129,12 @@ export const UpdateUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'user not updated' });
     }
 
-    return res.status(200).json({ message: 'user updated', data: updateuser });
+    return res
+      .status(200)
+      .json({ message: 'user updated successfully', data: updateuser });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: 'internal server error' });
   }
 };
-
-export const getUser = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    if (!id) {
-      return res.status(400).json({ message: 'id is required' });
-    }
-
-    const finduser = await db.user.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!finduser) {
-      return res.status(400).json({ message: 'user not found' });
-    }
-
-    return res.status(200).json({ message: 'user found', data: finduser });
-  } catch (error: any) {
-    console.log(error.message);
-    return res.status(500).json({ message: 'internal server error' });
-  }
-};
-
 // delete user to be implemented for admin only
