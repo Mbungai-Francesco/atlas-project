@@ -6,13 +6,13 @@ export const CreateUser = async (req: Request, res: Response) => {
     const { username, email, clerkId, classroomId } = await req.body;
 
     if (!clerkId) {
-      res.status(400).json({
+      return res.status(400).json({
         message: 'clerkId is required. please try again with this value added',
       });
     }
 
     if (!username || !email || !classroomId) {
-      res.status(400).json({
+      return res.status(400).json({
         message:
           'username, email and classes are required. please try again with these values added',
       });
@@ -26,7 +26,9 @@ export const CreateUser = async (req: Request, res: Response) => {
     });
 
     if (finduser) {
-      res.status(400).json({ message: 'user already exists', data: finduser });
+      return res
+        .status(400)
+        .json({ message: 'user already exists', data: finduser });
     }
 
     const createuser = await db.user.create({
@@ -39,15 +41,15 @@ export const CreateUser = async (req: Request, res: Response) => {
     });
 
     if (!createuser) {
-      res.status(400).json({ message: 'user not created' });
+      return res.status(400).json({ message: 'user not created' });
     }
 
-    res
+    return res
       .status(201)
       .json({ message: 'user created successfully', data: createuser });
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: 'Internal Server Error' });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
 
@@ -56,13 +58,13 @@ export const GetUsers = async (req: Request, res: Response) => {
     const getusers = await db.user.findMany();
 
     if (!getusers) {
-      res.status(400).json({ message: 'users not found' });
+      return res.status(400).json({ message: 'users not found' });
     }
 
-    res.status(200).json({ message: 'users found', data: getusers });
+    return res.status(200).json({ message: 'users found', data: getusers });
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: 'internal server error' });
+    return res.status(500).json({ message: 'internal server error' });
   }
 };
 
@@ -72,15 +74,15 @@ export const UpdateUser = async (req: Request, res: Response) => {
       await req.body;
 
     if (!id) {
-      res.status(400).json({ message: 'id is required' });
+      return res.status(400).json({ message: 'id is required' });
     }
 
     if (!email) {
-      res.status(400).json({ message: 'email is required' });
+      return res.status(400).json({ message: 'email is required' });
     }
 
     if (!username) {
-      res.status(400).json({ message: 'username is required' });
+      return res.status(400).json({ message: 'username is required' });
     }
 
     const finduser = await db.user.findUnique({
@@ -90,7 +92,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
     });
 
     if (!finduser) {
-      res.status(400).json({ message: 'user not found' });
+      return res.status(400).json({ message: 'user not found' });
     }
 
     const updateuser = await db.user.update({
@@ -108,13 +110,13 @@ export const UpdateUser = async (req: Request, res: Response) => {
     });
 
     if (!updateuser) {
-      res.status(400).json({ message: 'user not updated' });
+      return res.status(400).json({ message: 'user not updated' });
     }
 
-    res.status(200).json({ message: 'user updated', data: updateuser });
+    return res.status(200).json({ message: 'user updated', data: updateuser });
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: 'internal server error' });
+    return res.status(500).json({ message: 'internal server error' });
   }
 };
 
@@ -123,7 +125,7 @@ export const getUser = async (req: Request, res: Response) => {
     const { id } = req.params;
 
     if (!id) {
-      res.status(400).json({ message: 'id is required' });
+      return res.status(400).json({ message: 'id is required' });
     }
 
     const finduser = await db.user.findUnique({
@@ -133,13 +135,13 @@ export const getUser = async (req: Request, res: Response) => {
     });
 
     if (!finduser) {
-      res.status(400).json({ message: 'user not found' });
+      return res.status(400).json({ message: 'user not found' });
     }
 
-    res.status(200).json({ message: 'user found', data: finduser });
+    return res.status(200).json({ message: 'user found', data: finduser });
   } catch (error: any) {
     console.log(error.message);
-    res.status(500).json({ message: 'internal server error' });
+    return res.status(500).json({ message: 'internal server error' });
   }
 };
 
