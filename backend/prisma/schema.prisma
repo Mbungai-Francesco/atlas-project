@@ -1,3 +1,9 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,89 +13,124 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  email       String   @unique
-  name        String
-  role        Role
-  notes       Note[]   @relation("UserNotes")
-  classrooms  Classroom[] @relation("TeacherClassrooms")
-  classroomId String? @db.ObjectId
-  studentClassrooms Classroom? @relation("StudentClassrooms", fields: [classroomId], references: [id])
-  quizzes     Quiz[]   @relation("TeacherQuizzes")
-  attempts    Attempt[] @relation("StudentAttempts")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Note {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  content    String
-  subject    String
-  grade      String
-  topic      String
-  teacherId  String  @db.ObjectId
-  teacher    User     @relation("UserNotes", fields: [teacherId], references: [id])
-  classroom  Classroom? @relation(fields: [classroomId], references: [id])
-  classroomId String? @db.ObjectId
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Quiz {
-  id         String       @id @default(auto()) @map("_id") @db.ObjectId
-  title      String
-  subject    String
-  grade      String
-  topic      String
-  questions  QuizQuestion[]
-  teacherId  String      @db.ObjectId
-  teacher    User         @relation("TeacherQuizzes", fields: [teacherId], references: [id])
-  attempts   Attempt[]
-  classroom  Classroom?   @relation(fields: [classroomId], references: [id])
-  classroomId String? @db.ObjectId
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-}
-
-model QuizQuestion {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  question   String
-  options    String[]
-  answer     String
-  quizId     String  @db.ObjectId
-  quiz       Quiz     @relation(fields: [quizId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Attempt {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  score      Int
-  quizId     String @db.ObjectId
-  quiz       Quiz     @relation(fields: [quizId], references: [id])
-  studentId  String @db.ObjectId
-  student    User     @relation("StudentAttempts", fields: [studentId], references: [id])
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-model Classroom {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  subject    String
-  teacherId  String @db.ObjectId
-  teacher    User     @relation("TeacherClassrooms", fields: [teacherId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  notes      Note[]
-  quizzes    Quiz[]
-  students   User[]  @relation("StudentClassrooms")
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
-
-enum Role {
-  TEACHER
-  STUDENT
+enum UserType {
   ADMIN
+  STUDENT
+}
+
+enum classRoomContentType {
+  PDF
+  WORD
+  VIDEO
+  AUDIO
+}
+
+// Student and Admin model
+model User {
+  id         String    @id @default(auto()) @map("_id") @db.ObjectId
+  username   String    @unique
+  firstname  String?
+  secondname String?
+  class      String?
+  age        Int?
+  email      String    @unique
+  attempt    Attempt[]
+  usertype   UserType  @default(STUDENT)
+  clerkId    String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+}
+
+// Teacher model
+model Teacher {
+  id                String      @id @default(auto()) @map("_id") @db.ObjectId
+  name              String
+  email             String      @unique
+  username          String      @unique
+  firstname         String?
+  secondname        String?
+  clerkId           String      @unique
+  teachchingsubject String
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+  classRoom         ClassRoom[]
+}
+
+// ClassRoom model
+model ClassRoom {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  teacherId String   @db.ObjectId
+  teacher   Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  topics    Topic[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// TopicContent model (PDF, WORD, VIDEO, AUDIO)
+// This model refers to the content of a topic
+model TopicContent {
+  id          String               @id @default(auto()) @map("_id") @db.ObjectId
+  topicId     String               @db.ObjectId
+  contenttpye classRoomContentType @default(PDF)
+  content     String
+  topic       Topic                @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+}
+
+// Topic model
+// This model refers to the subject of a class
+model Topic {
+  id           String         @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  classRoomId  String         @db.ObjectId
+  classRoom    ClassRoom      @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
+  topicContent TopicContent[]
+  quizzes      Quiz[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+// Quiz model
+// This model refers to the quiz of a topic
+model Quiz {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  topicId   String     @db.ObjectId
+  topic     Topic      @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  questions Question[]
+  attempts  Attempt[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// Question model
+// This model refers to the question of a quiz
+model Question {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  question  String
+  options   String[]
+  answer    String
+  quizId    String   @db.ObjectId
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Attempt   Attempt? @relation(fields: [attemptId], references: [id])
+  attemptId String?  @db.ObjectId
+}
+
+// Attempt model
+// This model refers to the attempt of a student on a quiz
+model Attempt {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  score     Int
+  quizId    String     @db.ObjectId
+  quiz      Quiz       @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question  Question[]
+  answers   String[]
+  studentId String     @db.ObjectId
+  student   User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
