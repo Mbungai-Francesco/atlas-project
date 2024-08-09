@@ -10,7 +10,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.4.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@tippyjs/react": "^4.2.6",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.419.0",
@@ -18,7 +20,8 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.0",
     "tailwind-merge": "^2.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "tippy.js": "^6.3.7"
   },
   "devDependencies": {
     "@types/node": "^22.0.2",
