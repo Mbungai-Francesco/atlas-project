@@ -21,13 +21,13 @@ export const CreateUser = async (req: Request, res: Response) => {
     // find user in db
     const finduser = await db.user.findUnique({
       where: {
-        email,
+        clerkId,
       },
     });
 
     if (finduser) {
       return res
-        .status(400)
+        .status(200)
         .json({ message: 'user already exists', data: finduser });
     }
 
@@ -36,6 +36,8 @@ export const CreateUser = async (req: Request, res: Response) => {
         username,
         email,
         clerkId,
+      
+        
       },
     });
 

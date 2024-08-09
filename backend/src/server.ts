@@ -17,6 +17,6 @@ app.get('/', (req: Request, res: Response) => {
 app.use('/api', UserRoutes, TeacherRoutes);
 // app.use(UserRoutes,TeacherRoutes, /**.Routes */)
 
-app.listen(5000, () => {
+app.listen(3000, () => {
   console.log('server running on port 5000 : http://localhost:5000');
 });
