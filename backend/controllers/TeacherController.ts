@@ -1,4 +1,4 @@
-import { db } from '../lib/db.js';
+import { db } from '../lib/db';
 import { Request, Response } from 'express';
 
 export const CreateTeacher = async (req: Request, res: Response) => {
@@ -61,7 +61,7 @@ export const GetTeachers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'no teachers found' });
     }
 
-    return res.status(200).json({ message: 'teachers found', data: teachers });
+    return res.status(200).json(teachers);
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: 'Internal Server Error' });
@@ -86,7 +86,7 @@ export const GetTeacher = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'teacher not found' });
     }
 
-    return res.status(200).json({ message: 'teacher found', data: teacher });
+    return res.status(200).json(teacher);
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: 'Internal Server Error' });
@@ -136,3 +136,5 @@ export const UpdateTeacher = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+// delete teacher to be implemented for admin only

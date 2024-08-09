@@ -1,11 +1,16 @@
 import express from 'express';
-import { CreateUser, GetUsers } from '../controllers/UserController';
+import {
+  CreateTeacher,
+  GetTeachers,
+  GetTeacher,
+  UpdateTeacher,
+} from '../controllers/TeacherController';
 
-const Userrouter = express.Router()
+const Userrouter = express.Router();
 
-Userrouter.get('/teachers',GetUsers)
-Userrouter.post('/teachers',CreateUser)
+Userrouter.get('/teachers', GetTeachers);
+Userrouter.post('/teachers', CreateTeacher);
+Userrouter.put('/teachers/:id', UpdateTeacher);
+Userrouter.get('/teachers/:id', GetTeacher);
 
-
-
-export default Userrouter
+export default Userrouter;

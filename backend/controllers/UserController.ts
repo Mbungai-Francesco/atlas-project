@@ -61,7 +61,7 @@ export const GetUsers = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'users not found' });
     }
 
-    return res.status(200).json({ message: 'users found', data: getusers });
+    return res.status(200).json(getusers);
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: 'internal server error' });
@@ -86,7 +86,7 @@ export const GetUser = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'user not found' });
     }
 
-    return res.status(200).json({ message: 'user found', data: getuser });
+    return res.status(200).json(getuser);
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: 'internal server error' });
