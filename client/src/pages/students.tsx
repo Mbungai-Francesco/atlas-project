@@ -1,15 +1,35 @@
+import Description from "@/components/shared/description";
+import StudList from "@/components/studProgress/studList";
+import StudProfile from "@/components/studProgress/studProfile";
+import Card from "@/components/ui/card";
+
 interface StudentProps {
-  sub: (val: string) => void
+	sub: (val: string) => void;
 }
 
-const Student = ({sub}: StudentProps) => {
-  sub('Class overview')
-  return(
-    <>
-      <div></div>
-      <div></div>
-    </>
-  );
+const Student = ({ sub }: StudentProps) => {
+	sub("Student Progress");
+
+	return (
+		<>
+			<div className="grid grid-cols-3 gap-x-4">
+				<Card>
+					<Description
+						title="Student List"
+						description="View and manage your students' progress and performance."
+					></Description>
+          <StudList></StudList>
+				</Card>
+				<Card>
+					<Description
+						title="Student Profile"
+						description="Detailed view of a student's academic progress and performance."
+					></Description>
+					<StudProfile></StudProfile>
+				</Card>
+			</div>
+		</>
+	);
 };
 
 export default Student;
