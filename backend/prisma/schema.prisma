@@ -33,14 +33,17 @@ model User {
   firstname         String?
   secondname        String?
   classroomId       String[]    @db.ObjectId
-  studentclass      ClassRoom[] @relation(fields: [classroomId], references: [id])
   age               Int?
   email             String      @unique
   attempt           Attempt[]
   usertype          UserType    @default(STUDENT)
+
   clerkId           String      @unique
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
+  StudentInClass    StudentsInClass
+
+
 }
 
 // Teacher model
@@ -60,11 +63,22 @@ model Teacher {
 
 // ClassRoom model
 // many students can be in a classroom
+
+
+model StudentsInClass{
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  studentId String @db.ObjectId @unique
+  student   User   @relation(fields: [studentId], references: [id])
+  classRoomId String @db.ObjectId
+  classRoom   ClassRoom @relation(fields: [classRoomId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+
 model ClassRoom {
   id         String       @id @default(auto()) @map("_id") @db.ObjectId
   name       String
-  studentIds String[]     @db.ObjectId
-  students   User[]       @relation(fields: [studentIds], references: [id])
   teacherId  String[]     @db.ObjectId
   teachers   Teacher[]    @relation(fields: [teacherId], references: [id])
   topics     Topic[]
