@@ -1,4 +1,4 @@
-import { db } from '../lib/db.js';
+import { db } from '../lib/db';
 import { Request, Response } from 'express';
 
 export const CreateTeacher = async (req: Request, res: Response) => {

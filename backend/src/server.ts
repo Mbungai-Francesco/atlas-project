@@ -3,10 +3,12 @@ require('dotenv').config();
 require('../routes/UserRoutes');
 import UserRoutes from '../routes/UserRoutes';
 import TeacherRoutes from '../routes/TeacherRoutes';
+import cors from 'cors';
 
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/', (req: Request, res: Response) => {
   res.json('hello coming from the atlas landing page');
