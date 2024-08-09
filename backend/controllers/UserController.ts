@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 export const CreateUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, clerkId, classroomId } = await req.body;
+    const { username, email, clerkId } = await req.body;
 
     if (!clerkId) {
       return res.status(400).json({
@@ -11,7 +11,7 @@ export const CreateUser = async (req: Request, res: Response) => {
       });
     }
 
-    if (!username || !email || !classroomId) {
+    if (!username || !email) {
       return res.status(400).json({
         message:
           'username, email and classes are required. please try again with these values added',
@@ -35,7 +35,6 @@ export const CreateUser = async (req: Request, res: Response) => {
       data: {
         username,
         email,
-        classroomId,
         clerkId,
       },
     });
