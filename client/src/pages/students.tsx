@@ -2,6 +2,8 @@ import Description from "@/components/shared/description";
 import StudList from "@/components/studProgress/studList";
 import StudProfile from "@/components/studProgress/studProfile";
 import Card from "@/components/ui/card";
+import { User } from "@/types";
+import { useState } from "react";
 
 interface StudentProps {
 	sub: (val: string) => void;
@@ -9,6 +11,7 @@ interface StudentProps {
 
 const Student = ({ sub }: StudentProps) => {
 	sub("Student Progress");
+	const [ stud, setStud ] = useState<User[] | null>(null);
 
 	return (
 		<>
@@ -18,7 +21,9 @@ const Student = ({ sub }: StudentProps) => {
 						title="Student List"
 						description="View and manage your students' progress and performance."
 					></Description>
-          <StudList></StudList>
+          <StudList
+						
+					></StudList>
 				</Card>
 				<Card>
 					<Description

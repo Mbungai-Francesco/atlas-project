@@ -10,7 +10,7 @@ import SignInButton from "./components/shared/signIn";
 const App = () => {
   const [pageSub, setPageSub] = useState("");
   const {session} = useClerk()
-  const {user} = useUser()
+  // const {user} = useUser()
 
   return (
     <div className="flex box-border font-roboto">

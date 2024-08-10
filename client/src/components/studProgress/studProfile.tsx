@@ -9,9 +9,13 @@ function StudProfile() {
 					<UserRound color="gray"></UserRound>
 				</div>
 				<div>
-					<p className="font-semibold">Emma Johnson</p>
-					<p className="text-sm">Grade 10</p>
+					<p className="font-semibold">Emma Johnson</p> {/* student name*/}
+					<p className="text-sm">Grade 10</p> {/* student grade*/}
 				</div>
+			</div>
+			<div>
+				<p>Assessments</p>
+				
 			</div>
 		</>
 	);
