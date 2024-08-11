@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 
 export const CreateUser = async (req: Request, res: Response) => {
   try {
-    const { username, email, clerkId } = await req.body;
+    const { username, email, clerkId, ...others } = await req.body;
 
     if (!clerkId) {
       return res.status(400).json({
@@ -36,8 +36,7 @@ export const CreateUser = async (req: Request, res: Response) => {
         username,
         email,
         clerkId,
-      
-        
+        ...others,
       },
     });
 
