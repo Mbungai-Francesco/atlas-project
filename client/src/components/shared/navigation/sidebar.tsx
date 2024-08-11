@@ -41,9 +41,15 @@ interface SidebarItemsProps {
   label: string;
   path: string;
   icon: keyof typeof icons;
+  isMobile?: boolean;
 }
 
-function SidebarItem({ label, path, icon }: SidebarItemsProps) {
+export function SidebarItem({
+  label,
+  path,
+  icon,
+  isMobile,
+}: SidebarItemsProps) {
   const Icon = icons[icon];
 
   const { pathname } = useLocation();
@@ -51,32 +57,47 @@ function SidebarItem({ label, path, icon }: SidebarItemsProps) {
   const isActive = pathname === path;
 
   return (
-    <TooltipProvider delayDuration={10}>
-      <Tooltip>
-        <TooltipTrigger
-          className={cn(
-            "h-10 w-10 rounded-md flex items-center justify-center",
-            {
-              "bg-secondary ": isActive,
-            }
-          )}
+    <>
+      {!isMobile && (
+        <TooltipProvider delayDuration={10}>
+          <Tooltip>
+            <TooltipTrigger
+              className={cn(
+                "h-10 w-10 rounded-md flex items-center justify-center",
+                {
+                  "bg-secondary ": isActive,
+                }
+              )}
+            >
+              <Link
+                to={path}
+                className={cn(
+                  "rounded-lg flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground h-full w-full",
+                  {
+                    "text-foreground": isActive,
+                  }
+                )}
+              >
+                <Icon className="w-5 h-5" />
+              </Link>
+            </TooltipTrigger>
+            <TooltipContent align="start" side="right">
+              {label}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )}
+      {isMobile && (
+        <Link
+          className={cn("flex items-center gap-3 p-2 rounded-lg", {
+            "bg-muted": isActive,
+          })}
+          to={path}
         >
-          <Link
-            to={path}
-            className={cn(
-              "rounded-lg flex items-center justify-center text-muted-foreground transition-colors hover:text-foreground h-full w-full",
-              {
-                "text-foreground": isActive,
-              }
-            )}
-          >
-            <Icon className="w-5 h-5" />
-          </Link>
-        </TooltipTrigger>
-        <TooltipContent align="start" side="right">
-          {label}
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+          <Icon className="w-5 h-5" />
+          <span>{label}</span>
+        </Link>
+      )}
+    </>
   );
 }
