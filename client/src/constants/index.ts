@@ -1,23 +1,22 @@
 import { useMemo } from "react";
-import { Users, User, ChartNoAxesColumnIncreasing } from "lucide-react";
 
 export const navRoutes = () => {
   const routes = useMemo(
     () => [
       {
-        name: 'Students',
+        name: "Students",
         path: "/",
-        icon: Users
+        icon: "Unplug",
       },
       {
-        name: 'Profile',
+        name: "Profile",
         path: "/about",
-        icon: User
+        icon: "User",
       },
       {
-        name: 'Analysis',
+        name: "Analysis",
         path: "/analysis",
-        icon: ChartNoAxesColumnIncreasing
+        icon: "ChartNoAxesColumnIncreasing",
       },
     ],
     []

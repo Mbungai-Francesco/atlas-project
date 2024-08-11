@@ -1,10 +1,7 @@
-interface AboutProps {
-  sub: (val: string) => void
-}
+interface AboutProps {}
 
-const About = ({sub}: AboutProps) => {
-  sub('about')
-  return <div>About</div>;
+const About = ({}: AboutProps) => {
+  return <div className="w-full">About</div>;
 };
 
 export default About;
