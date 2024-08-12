@@ -3,6 +3,7 @@ require('dotenv').config();
 require('../routes/UserRoutes');
 import UserRoutes from '../routes/UserRoutes';
 import TeacherRoutes from '../routes/TeacherRoutes';
+import Classroomroutes from '../routes/ClassroomRoutes';
 import cors from 'cors';
 
 const app = express();
@@ -14,7 +15,7 @@ app.get('/', (req: Request, res: Response) => {
   res.json('hello coming from the atlas landing page');
 });
 
-app.use('/api', UserRoutes, TeacherRoutes);
+app.use('/api', UserRoutes, TeacherRoutes, Classroomroutes);
 // app.use(UserRoutes,TeacherRoutes, /**.Routes */)
 
 app.listen(5000, () => {

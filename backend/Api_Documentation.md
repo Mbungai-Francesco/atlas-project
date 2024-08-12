@@ -551,6 +551,7 @@ Below are the routes to interact with the database models:
 
 - **GET** `/api/classrooms`: Get all classrooms.
 - **GET** `/api/classrooms/:id`: Get a classroom by ID.
+- **GET** `/api/myclassrooms`: Get classroom of a teacher (clerkId in the auth header).
 - **POST** `/api/classrooms`: Create a new classroom.
 - **PUT** `/api/classrooms/:id`: Update a classroom by ID.
 - **DELETE** `/api/classrooms/:id`: Delete a classroom by ID.
