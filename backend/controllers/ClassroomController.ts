@@ -50,10 +50,20 @@ export const CreateClassroom = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'class not created' });
     }
 
-    const teacherinclass = await db.teacherInClass.create({
+    const existingClassroom = await db.classRoom.findUnique({
+      where: { id: createclassroom.id },
+      select: { teacherId: true },
+    });
+
+    const updatedClassroomIds = [
+      ...(existingClassroom?.teacherId || []),
+      teacher.id,
+    ].filter(Boolean) as string[];
+
+    const updatedClassroom = await db.classRoom.update({
+      where: { id: createclassroom.id },
       data: {
-        teacherId: teacher.id,
-        classRoomId: createclassroom.id,
+        teacherId: updatedClassroomIds,
       },
     });
 
