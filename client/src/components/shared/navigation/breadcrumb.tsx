@@ -20,7 +20,7 @@ const BreadcrumbNavigation = () => {
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink asChild>
-            <Link to="/dashboard">Dashboard</Link>
+            <Link to="/">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
 
