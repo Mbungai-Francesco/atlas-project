@@ -95,6 +95,11 @@ export const GetUser = async (req: Request, res: Response) => {
 
 export const UpdateUser = async (req: Request, res: Response) => {
   try {
+    const auth = req.headers.authorization?.split(' ')[1];
+    if (!auth) {
+      return res.status(400).json({ message: 'authorization is required' });
+    }
+
     const { id } = req.params;
     const values = req.body;
 
