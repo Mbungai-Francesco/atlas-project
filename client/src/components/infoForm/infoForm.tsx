@@ -1,20 +1,62 @@
-import { Input } from "../ui/input";
-import { useState } from "react";
-import { Button } from "../ui/button";
+"use client"
 
+import axios from 'axios';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { useAuth } from "@clerk/clerk-react"
+
+const formSchema = z.object({
+  age: z.string(),
+	classrooms: z.array(z.string()).refine((value) => value.some((classroom) => classroom), {
+    message: "You have to select at least one classroom.",
+  }),
+})
+
+// Main Inform function
 const InfoForm = () => {
-	const [classes, setClasses] = useState<string[]>([]);
+	const { userId } = useAuth()
 
-	const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      setClasses(
-        (prev) => [...prev, event.target.value]
-      );
-    } else {
-      setClasses(classes.filter((c) => c !== event.target.value));
-    }	
-	};
+	// update user
+	const updateUser = async (data : {age: number, classroomId: string[]}) => {
+		try {
+			console.log(userId);
+      const response = await axios.put(`http://localhost:5000/api/users/66ba23aeeaf23ec222726b31`, data);
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+	}
 
+	// define the form
+	const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      classrooms: [],
+    },
+  })
+
+	// submit function
+	function onSubmit(data: z.infer<typeof formSchema>) {
+		console.table(data);
+		const newData = {age: Number(data.age), classroomId: data.classrooms}
+		updateUser(newData)
+  }
+
+	// sample data
 	const data = [
 		{
 			id: "classroom001",
@@ -214,39 +256,79 @@ const InfoForm = () => {
 		},
 	];
 
-	const handleSubmit = (e: React.FormEvent) => {
-		e.preventDefault();
-    console.log(classes);
-    
-		console.log("submitted");
-	};
-
 	return (
 		<>
-			<form onSubmit={handleSubmit}>
-				<label>
-					<Input type="number" placeholder="Your age" />
-				</label>
-				<p>Pick your class(es)</p>
-				<div className="items-top flex flex-col max-h-40 overflow-y-scroll">
-					{data.map((classroom) => (
-						<>
-							<label key={classroom.id} className="flex items-center">
-								<input
-									type="checkbox"
-									value={classroom.id}
-									checked={classes.includes(classroom.id)}
-									onChange={handleCheckboxChange}
-								/>
-								<p>{classroom.name}</p>
-							</label>
-						</>
-					))}
-				</div>
-				<Button>Submit</Button>
-			</form>
+			<Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<FormField
+          control={form.control}
+          name="age"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Age</FormLabel>
+              <FormControl>
+                <Input type="number" placeholder="Enter your age" {...field} />
+              </FormControl>
+              <FormDescription>
+                This is your public display age.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="classrooms"
+          render={() => (
+            <FormItem>
+              <div className="mb-4">
+                <FormLabel className="text-base">Sidebar</FormLabel>
+                <FormDescription>
+                  Select the items you want to display in the sidebar.
+                </FormDescription>
+              </div>
+              {data.map((item) => (
+                <FormField
+                  key={item.id}
+                  control={form.control}
+                  name="classrooms"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value?.includes(item.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item.id])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id
+                                    )
+                                  )
+                            }}
+                          />
+                        </FormControl>
+                        <FormLabel className="text-sm font-normal">
+                          {item.name}
+                        </FormLabel>
+                      </FormItem>
+                    )
+                  }}
+                />
+              ))}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
 		</>
 	);
 };
 
-export default InfoForm;
+export default InfoForm

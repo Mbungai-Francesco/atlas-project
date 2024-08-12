@@ -7,6 +7,8 @@ import Navbar from "@/components/shared/navigation/navbar";
 import { AuthLayout } from "@/pages/layout";
 import { useAuth } from "@clerk/clerk-react";
 import { cn } from "./lib/utils";
+import CreateUser from "./components/createUser";
+import InfoForm from "./components/infoForm/infoForm";
 
 const App = () => {
   const { userId } = useAuth();
@@ -19,9 +21,12 @@ const App = () => {
           {userId && <Navbar />}
           <div className={cn(userId && "relative calc-height p-6 w-full")}>
             <Routes>
-              <Route path="/" index element={<Welcome />} />
-              <Route path="/about" index element={<About />} />
-              <Route path="/student" element={<Stud />} />
+              <Route path="/" index element={<SignInPage />} />
+              <Route path="/student" element={<Student />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/createUser" element={<CreateUser />} />
+              <Route path="/infoForm" element={<InfoForm />} />
+              <Route path="/stud" element={<Stud />} />
               <Route path="/auth" element={<AuthLayout />}>
                 <Route index path="sign-in" element={<SignInPage />} />
                 <Route path="sign-up" element={<SignUpPage />} />

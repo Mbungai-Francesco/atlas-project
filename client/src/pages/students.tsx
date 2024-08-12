@@ -1,4 +1,3 @@
-import Description from "@/components/shared/description";
 import Students from "@/components/studProgress/studList";
 import StudProfile from "@/components/studProgress/studProfile";
 import {
@@ -13,9 +12,6 @@ import { useEffect } from "react";
 import { redirect } from "react-router-dom";
 
 const Student = () => {
-	// const [ stud, setStud ] = useState<User[] | null>(null);
-
-const Student = ({}: StudentProps) => {
   const { userId } = useAuth();
 
   useEffect(() => {
