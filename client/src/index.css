@@ -71,4 +71,8 @@
   .calc-height {
     height: calc(100vh - 80px);
   }
+
+  div.cl-internal-1dauvpw {
+    display: none !important;
+  }
 }

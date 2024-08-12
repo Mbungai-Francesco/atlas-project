@@ -10,6 +10,7 @@ import { SidebarItem } from "./sidebar";
 
 const Navbar = () => {
   const routes = navRoutes();
+
   return (
     <header className="sticky top-0 z-30 flex h-20 items-center justify-between gap-4  px-4  sm:border-0 sm:px-6">
       <Sheet>
@@ -34,9 +35,18 @@ const Navbar = () => {
         </SheetContent>
       </Sheet>
       <BreadcrumbNavigation />
-      <div className="flex justify-between items-center  h-full">
+      <div className="flex justify-between items-center  h-full gap-4">
         <SearchBar />
-        <UserButton />
+        <UserButton
+          appearance={{
+            elements: {
+              userButtonAvatarBox: {
+                width: "40px",
+                height: "40px",
+              },
+            },
+          }}
+        />
       </div>
     </header>
   );
