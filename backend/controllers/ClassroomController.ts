@@ -67,7 +67,9 @@ export const CreateClassroom = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(200).json(createclassroom);
+    return res
+      .status(200)
+      .json({ message: 'class created successfully', data: updatedClassroom });
   } catch (error: any) {
     console.log(error.message);
     return res.status(500).json({ message: 'internal server error' });
