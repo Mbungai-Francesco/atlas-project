@@ -15,5 +15,10 @@ const CreateUser = () => {
         email: user?.emailAddresses[0].emailAddress,
         clerkId: user?.id,
       })
-  })
+    })
+  }
+
+  return (
+    <></>
+  )
 }

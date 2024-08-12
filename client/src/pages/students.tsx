@@ -16,9 +16,9 @@ const Student = () => {
 						title="Student List"
 						description="View and manage your students' progress and performance."
 					></Description>
-          <StudList
+          <Students
 						
-					></StudList>
+					></Students>
 				</Card>
 				<Card>
 					<Description
