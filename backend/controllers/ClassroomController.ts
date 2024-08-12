@@ -75,3 +75,74 @@ export const CreateClassroom = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'internal server error' });
   }
 };
+
+export const GetMyClassrooms = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res
+        .status(400)
+        .json({ message: 'missing clerkId in authorization header' });
+    }
+
+    const teacher = await db.teacher.findUnique({
+      where: {
+        clerkId: auth,
+      },
+    });
+
+    if (!teacher) {
+      return res.status(401).json({ message: 'unauthorized access' });
+    }
+
+    const classrooms = await db.classRoom.findMany({
+      where: {
+        teacherId: {
+          hasSome: [teacher.id],
+        },
+      },
+    });
+
+    return res.status(200).json(classrooms);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'internal server error' });
+  }
+};
+
+export const GetClassrooms = async (req: Request, res: Response) => {
+  try {
+    const classrooms = await db.classRoom.findMany();
+
+    return res.status(200).json(classrooms);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'internal server error' });
+  }
+};
+
+export const GetClassroom = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'classroom id is required' });
+    }
+
+    const classroom = await db.classRoom.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    if (!classroom) {
+      return res.status(400).json({ message: 'classroom not found' });
+    }
+
+    return res.status(200).json(classroom);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(500).json({ message: 'internal server error' });
+  }
+};
