@@ -1,10 +1,10 @@
 # ATLAS (Advanced Teaching and Learning Management System) - Database Schema and API Routes
 
-## Database Schema
+# Database Schema
 
-# you don't need to take care of the date fields in the frontend.
+## NB: you don't need to take care of the date fields in the frontend.
 
-### User Model
+# User Model
 
 #### Fields:
 
@@ -517,7 +517,7 @@
 
 ---
 
-## API Routes
+# API Routes
 
 Below are the routes to interact with the database models:
 

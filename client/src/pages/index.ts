@@ -4,6 +4,8 @@ import Home from "./home";
 
 import Student from "./students";
 
+import Stud from "./student";
+
 import Welcome from "./welcome";
 
-export { Home, About, Student, Welcome};
+export { Home, About, Student, Stud, Welcome };

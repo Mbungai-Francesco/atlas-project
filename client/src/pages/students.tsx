@@ -1,5 +1,5 @@
 import Description from "@/components/shared/description";
-import StudList from "@/components/studProgress/studList";
+import Students from "@/components/studProgress/studList";
 import StudProfile from "@/components/studProgress/studProfile";
 import Card from "@/components/ui/card";
 // import { User } from "@/types";
