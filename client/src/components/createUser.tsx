@@ -29,7 +29,7 @@ const CreateUser = () => {
     if (response.status === 200 || response.status === 201) {
       console.log(response.status);
       console.log(response.data)
-      navigate('/infoForm')
+      navigate(`/infoForm/${response.data.data.id}`)
     }
   }
 

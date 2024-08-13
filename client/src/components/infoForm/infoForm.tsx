@@ -18,6 +18,10 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useUser } from '@clerk/clerk-react';
+import { useParams } from 'react-router-dom';
+import { ClassRoom } from '@/types';
+import { useEffect, useState } from 'react';
+import { CurrentUser } from '@/routeHooks/currentUser';
 
 const formSchema = z.object({
   age: z.string(),
@@ -28,17 +32,35 @@ const formSchema = z.object({
 
 // Main Inform function
 const InfoForm = () => {
+	const { userId } = useParams<{ userId: string }>()
+	const [ data, setData ] = useState<ClassRoom[]>()
 	const { user } = useUser()
+
+	useEffect(() => {
+		if(user){
+			getClassrooms()
+		}
+	}, [user])
 
 	// update user
 	const updateUser = async (data : {age: number, classroomId: string[]}) => {
 		try {
-			console.log(user?.id);
-      const response = await axios.put(`http://localhost:5000/api/users/${user?.id}`, data);
-      console.log('Response:', response.data);
+			console.log(userId);
+      const response = await axios.put(`http://localhost:5000/api/users/${userId}`, data);
+      console.log('Response:', response.data.data);
     } catch (error) {
       console.error('Error:', error);
     }
+	}
+
+	// get classrooms
+	const getClassrooms = async () => {
+		try {
+			const response = await axios.get('http://localhost:5000/api/classrooms')
+			setData(response.data)
+		} catch (error) {
+			console.error('Error:', error);
+		}
 	}
 
 	// define the form
@@ -56,205 +78,10 @@ const InfoForm = () => {
 		updateUser(newData)
   }
 
-	// sample data
-	const data = [
-		{
-			id: "classroom001",
-			name: "Math",
-			studentIds: ["user004", "user006"],
-			students: [
-				{
-					id: "user004",
-					username: "ajones",
-					firstname: "Alice",
-					secondname: "Jones",
-					classroomId: ["classroom001", "classroom002"],
-					age: 17,
-					email: "alice.jones@student.edu",
-					usertype: "STUDENT",
-					clerkId: "clerk004",
-					createdAt: "2024-08-09T09:45:00Z",
-					updatedAt: "2024-08-09T09:45:00Z",
-				},
-				{
-					id: "user006",
-					username: "dgreen",
-					firstname: "Diana",
-					secondname: "Green",
-					classroomId: ["classroom001", "classroom003"],
-					email: "diana.green@student.edu",
-					usertype: "STUDENT",
-					clerkId: "clerk006",
-					createdAt: "2024-08-09T10:15:00Z",
-					updatedAt: "2024-08-09T10:15:00Z",
-				},
-			],
-			teacherId: ["teacher001"],
-			teachers: [
-				{
-					id: "teacher001",
-					email: "john.doe@atlas.edu",
-					username: "jdoe",
-					firstname: "John",
-					secondname: "Doe",
-					clerkId: "clerk001",
-					teachingsubject: "Mathematics",
-					classroomId: ["classroom001"],
-					createdAt: "2024-08-09T08:00:00Z",
-					updatedAt: "2024-08-09T08:00:00Z",
-				},
-			],
-			topics: [
-				{
-					id: "topic001",
-					name: "Calculus",
-					classRoomId: "classroom001",
-					createdAt: "2024-08-09T09:00:00Z",
-					updatedAt: "2024-08-09T09:00:00Z",
-				},
-				{
-					id: "topic004",
-					name: "Linear Algebra",
-					classRoomId: "classroom002",
-					createdAt: "2024-08-09T09:45:00Z",
-					updatedAt: "2024-08-09T09:45:00Z",
-				},
-			],
-			createdAt: "2024-08-09T09:45:00Z",
-			updatedAt: "2024-08-09T09:45:00Z",
-		},
-		{
-			id: "classroom002",
-			name: "Chem",
-			studentIds: ["user004", "user005"],
-			students: [
-				{
-					id: "user004",
-					username: "ajones",
-					firstname: "Alice",
-					secondname: "Jones",
-					classroomId: ["classroom001", "classroom002"],
-					age: 17,
-					email: "alice.jones@student.edu",
-					usertype: "STUDENT",
-					clerkId: "clerk004",
-					createdAt: "2024-08-09T09:45:00Z",
-					updatedAt: "2024-08-09T09:45:00Z",
-				},
-				{
-					id: "user005",
-					username: "bwhite",
-					firstname: "Bob",
-					secondname: "White",
-					classroomId: ["classroom002", "classroom003"],
-					age: 16,
-					email: "bob.white@student.edu",
-					usertype: "STUDENT",
-					clerkId: "clerk005",
-					createdAt: "2024-08-09T10:00:00Z",
-					updatedAt: "2024-08-09T10:00:00Z",
-				},
-			],
-			teacherId: ["teacher002"],
-			teachers: [
-				{
-					id: "teacher002",
-					email: "jane.smith@atlas.edu",
-					username: "jsmith",
-					firstname: "Jane",
-					secondname: "Smith",
-					clerkId: "clerk002",
-					teachingsubject: "Chemistry",
-					classroomId: ["classroom002"],
-					createdAt: "2024-08-09T08:15:00Z",
-					updatedAt: "2024-08-09T08:15:00Z",
-				},
-			],
-			topics: [
-				{
-					id: "topic002",
-					name: "Organic Chemistry",
-					classRoomId: "classroom003",
-					createdAt: "2024-08-09T09:15:00Z",
-					updatedAt: "2024-08-09T09:15:00Z",
-				},
-				{
-					id: "topic005",
-					name: "Inorganic Chemistry",
-					classRoomId: "classroom004",
-					createdAt: "2024-08-09T10:00:00Z",
-					updatedAt: "2024-08-09T10:00:00Z",
-				},
-			],
-			createdAt: "2024-08-09T10:00:00Z",
-			updatedAt: "2024-08-09T10:00:00Z",
-		},
-		{
-			id: "classroom003",
-			name: "Physics",
-			studentIds: ["user006", "user005"],
-			students: [
-				{
-					id: "user006",
-					username: "dgreen",
-					firstname: "Diana",
-					secondname: "Green",
-					classroomId: ["classroom001", "classroom003"],
-					email: "diana.green@student.edu",
-					usertype: "STUDENT",
-					clerkId: "clerk006",
-					createdAt: "2024-08-09T10:15:00Z",
-					updatedAt: "2024-08-09T10:15:00Z",
-				},
-				{
-					id: "user005",
-					username: "bwhite",
-					firstname: "Bob",
-					secondname: "White",
-					classroomId: ["classroom002", "classroom003"],
-					age: 16,
-					email: "bob.white@student.edu",
-					usertype: "STUDENT",
-					clerkId: "clerk005",
-					createdAt: "2024-08-09T10:00:00Z",
-					updatedAt: "2024-08-09T10:00:00Z",
-				},
-			],
-			teacherId: ["teacher002"],
-			teachers: [
-				{
-					id: "teacher002",
-					email: "jane.smith@atlas.edu",
-					username: "jsmith",
-					firstname: "Jane",
-					secondname: "Smith",
-					clerkId: "clerk002",
-					teachingsubject: "Chemistry",
-					classroomId: ["classroom002"],
-					createdAt: "2024-08-09T08:15:00Z",
-					updatedAt: "2024-08-09T08:15:00Z",
-				},
-			],
-			topics: [
-				{
-					id: "topic002",
-					name: "Organic Chemistry",
-					classRoomId: "classroom003",
-					createdAt: "2024-08-09T09:15:00Z",
-					updatedAt: "2024-08-09T09:15:00Z",
-				},
-				{
-					id: "topic005",
-					name: "Inorganic Chemistry",
-					classRoomId: "classroom004",
-					createdAt: "2024-08-09T10:00:00Z",
-					updatedAt: "2024-08-09T10:00:00Z",
-				},
-			],
-			createdAt: "2024-08-09T10:00:00Z",
-			updatedAt: "2024-08-09T10:00:00Z",
-		},
-	];
+	const currentUser = CurrentUser()
+
+	console.log(currentUser);
+	
 
 	return (
 		<>
@@ -287,7 +114,7 @@ const InfoForm = () => {
                   Select the items you want to display in the sidebar.
                 </FormDescription>
               </div>
-              {data.map((item) => (
+              {data?.map((item) => (
                 <FormField
                   key={item.id}
                   control={form.control}
