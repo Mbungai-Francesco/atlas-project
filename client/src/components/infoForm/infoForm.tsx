@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { useAuth } from "@clerk/clerk-react"
+import { useUser } from '@clerk/clerk-react';
 
 const formSchema = z.object({
   age: z.string(),
@@ -28,13 +28,13 @@ const formSchema = z.object({
 
 // Main Inform function
 const InfoForm = () => {
-	const { userId } = useAuth()
+	const { user } = useUser()
 
 	// update user
 	const updateUser = async (data : {age: number, classroomId: string[]}) => {
 		try {
-			console.log(userId);
-      const response = await axios.put(`http://localhost:5000/api/users/66ba23aeeaf23ec222726b31`, data);
+			console.log(user?.id);
+      const response = await axios.put(`http://localhost:5000/api/users/${user?.id}`, data);
       console.log('Response:', response.data);
     } catch (error) {
       console.error('Error:', error);

@@ -7,12 +7,14 @@ const CreateUser = () => {
   const {user} = useUser()
   const navigate = useNavigate()
 
-  // useEffect(() => {
-  //   if(!user) {
-  //     navigate('/')
-  //   }
-  //   createUser()
-  // }, [ user ])
+  useEffect(() => {
+    if(user){
+      createUser()
+    }
+    else{
+      console.log('No user found');
+    }
+  }, [ user ])
   
   const createUser = async () => {
     const response = await axios.post('http://localhost:5000/api/users', {
@@ -23,7 +25,6 @@ const CreateUser = () => {
     if(response.status === 400) {
       console.log('Failed to create user');
       navigate('/infoForm') 
-      
     }
     if (response.status === 200 || response.status === 201) {
       console.log(response.status);
@@ -32,8 +33,17 @@ const CreateUser = () => {
     }
   }
 
+  // const createUser= () => {
+  //   const sue = {
+  //     username: user?.username,
+  //     email: user?.emailAddresses[0].emailAddress,
+  //     clerkId: user?.id
+  //   }
+  //   console.table(sue);
+  // }
+
   return (
-    <>{createUser()}</>
+    <></>
   )
 }
 

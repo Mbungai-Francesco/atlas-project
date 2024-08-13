@@ -4,6 +4,5 @@ import Student from "./students";
 import Stud from "./student";
 import SignInPage from "./auth/sign-in";
 import SignUpPage from "./auth/sign-up";
-import Welcome from "./welcome";
 
-export { Home, About, Student, Stud, SignInPage, SignUpPage, Welcome };
+export { Home, About, Student, Stud, SignInPage, SignUpPage };
