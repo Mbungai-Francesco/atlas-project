@@ -4,6 +4,7 @@ require('../routes/UserRoutes');
 import UserRoutes from '../routes/UserRoutes';
 import TeacherRoutes from '../routes/TeacherRoutes';
 import Classroomroutes from '../routes/ClassroomRoutes';
+import LoginRoutes from '../routes/Login';
 import cors from 'cors';
 
 const app = express();
@@ -15,7 +16,7 @@ app.get('/', (req: Request, res: Response) => {
   res.json('hello coming from the atlas landing page');
 });
 
-app.use('/api', UserRoutes, TeacherRoutes, Classroomroutes);
+app.use('/api', UserRoutes, TeacherRoutes, Classroomroutes, LoginRoutes);
 // app.use(UserRoutes,TeacherRoutes, /**.Routes */)
 
 app.listen(5000, () => {

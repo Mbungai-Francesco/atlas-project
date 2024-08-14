@@ -184,6 +184,10 @@ export const UpdateClassroom = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'classroom not found' });
     }
 
+    if (!findclassroom.teacherId.includes(teacher.id)) {
+      return res.status(401).json({ message: 'unauthorized access' });
+    }
+
     const { teacherId, ...values } = req.body;
     let updatedTeacherIds: string[] = [];
 
