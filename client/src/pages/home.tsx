@@ -1,9 +1,4 @@
-interface HomeProps {
-  sub: (val: string) => void
-}
-
-const Home = ({sub}: HomeProps) => {
-  sub('home')
+const Home = () => {
   return <div>Home</div>;
 };
 

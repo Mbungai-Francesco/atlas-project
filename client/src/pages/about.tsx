@@ -1,7 +1,6 @@
-interface AboutProps {}
+const About = () => {
 
-const About = ({}: AboutProps) => {
-  return <div className="w-full">About</div>;
+  return <div>About</div>;
 };
 
 export default About;

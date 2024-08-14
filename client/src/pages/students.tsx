@@ -1,4 +1,3 @@
-import Description from "@/components/shared/description";
 import Students from "@/components/studProgress/studList";
 import StudProfile from "@/components/studProgress/studProfile";
 import {
@@ -12,9 +11,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useEffect } from "react";
 import { redirect } from "react-router-dom";
 
-interface StudentProps {}
-
-const Student = ({}: StudentProps) => {
+const Student = () => {
   const { userId } = useAuth();
 
   useEffect(() => {
