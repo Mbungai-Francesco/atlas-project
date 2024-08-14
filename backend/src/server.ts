@@ -5,6 +5,7 @@ import UserRoutes from '../routes/UserRoutes';
 import TeacherRoutes from '../routes/TeacherRoutes';
 import Classroomroutes from '../routes/ClassroomRoutes';
 import LoginRoutes from '../routes/Login';
+import QuizRoutes from '../routes/QuizRoutes';
 import cors from 'cors';
 
 const app = express();
@@ -16,7 +17,14 @@ app.get('/', (req: Request, res: Response) => {
   res.json({ message: 'Welcome to ATLAS API services...' });
 });
 
-app.use('/api', UserRoutes, TeacherRoutes, Classroomroutes, LoginRoutes);
+app.use(
+  '/api',
+  UserRoutes,
+  TeacherRoutes,
+  Classroomroutes,
+  LoginRoutes,
+  QuizRoutes,
+);
 
 app.get('*', (req: Request, res: Response) => {
   res.status(404).json({ message: 'You are OUT OF BOUNDARIES!!!' });
