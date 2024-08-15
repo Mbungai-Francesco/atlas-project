@@ -331,3 +331,48 @@ export const DeleteQuestions = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const DeleteQuestion = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res.status(400).json({ message: 'Authorization is required' });
+    }
+
+    const { id, questionId } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Quiz ID is required' });
+    }
+
+    if (!questionId) {
+      return res.status(400).json({ message: 'Question ID is required' });
+    }
+
+    const quiz = await db.quiz.findUnique({
+      where: { id },
+    });
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    const question = await db.question.findUnique({
+      where: { id: questionId },
+    });
+
+    if (!question) {
+      return res.status(404).json({ message: 'Question not found' });
+    }
+
+    await db.question.delete({
+      where: { id: questionId },
+    });
+
+    return res.status(200).json({ message: 'Question deleted successfully' });
+  } catch (error: any) {
+    console.error(error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
