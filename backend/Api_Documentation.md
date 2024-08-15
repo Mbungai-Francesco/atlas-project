@@ -523,6 +523,10 @@ Below are the routes to interact with the database models:
 
 **Note:** The local testing base URL is `http://localhost:5000`.
 
+### Login route
+
+- **POST** `/api/login`: Login into account
+
 ### 1. User Routes
 
 - **GET** `/api/users`: Get all users.
@@ -579,16 +583,15 @@ Below are the routes to interact with the database models:
 - **POST** `/api/quizzes`: Create a new quiz.
 - **PUT** `/api/quizzes/:id`: Update a quiz by ID.
 - **DELETE** `/api/quizzes/:id`: Delete a quiz by ID.
+- **DELETE** `/api/quizzes/:id/questions`: Delete many questions from a quiz
+- **DELETE** `/api/quizzes/:id/questions/:questionId`: Delete a question from a quiz
 
 ### 8. Question Routes
 
 - **GET** `/api/questions`: Get all questions.
 - **GET** `/api/questions/:id`: Get a question by ID.
 - **POST** `/api/questions`: Create a new question.
-- \*\*PUT
-
-\*\* `/api/questions/:id`: Update a question by ID.
-
+- **PUT** `/api/questions/:id`: Update a question by ID.
 - **DELETE** `/api/questions/:id`: Delete a question by ID.
 
 ### 9. Attempt Routes
