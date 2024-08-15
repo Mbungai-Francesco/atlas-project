@@ -1,3 +1,4 @@
+import exp from 'constants';
 import { db } from '../lib/db';
 import { Request, Response } from 'express';
 
@@ -111,6 +112,220 @@ export const GetQuizzes = async (req: Request, res: Response) => {
     }
 
     return res.status(200).json(getquizzes);
+  } catch (error: any) {
+    console.error(error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const UpdateQuiz = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res.status(400).json({ message: 'Authorization is required' });
+    }
+
+    const { id } = req.params;
+    const { questions, ...others } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Quiz ID is required' });
+    }
+
+    const quiz = await db.quiz.findUnique({
+      where: { id },
+    });
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    // Start a transaction to ensure atomicity
+    await db.$transaction(async (prisma) => {
+      // Update questions if provided
+      if (questions && Array.isArray(questions) && questions.length > 0) {
+        for (const question of questions) {
+          if (
+            !question.question ||
+            !question.options ||
+            question.options.length < 4 ||
+            !question.answer
+          ) {
+            return res.status(400).json({
+              message:
+                'Each question must have a question text, at least 4 options, and an answer',
+            });
+          }
+
+          if (!question.options.includes(question.answer)) {
+            return res
+              .status(400)
+              .json({ message: 'The answer must be one of the options' });
+          }
+
+          // Check if it's an existing question (update) or a new one (create)
+          if (question.id) {
+            await prisma.question.update({
+              where: { id: question.id },
+              data: {
+                question: question.question,
+                options: question.options,
+                answer: question.answer,
+              },
+            });
+          } else {
+            await prisma.question.create({
+              data: {
+                quizId: id,
+                question: question.question,
+                options: question.options,
+                answer: question.answer,
+              },
+            });
+          }
+        }
+      }
+
+      // Update the quiz properties if `others` contains any fields
+      if (Object.keys(others).length > 0) {
+        const { topicId, title } = others;
+
+        const updateData: any = {};
+
+        if (
+          title &&
+          title !== quiz.title &&
+          !(await db.quiz.findUnique({ where: { title } }))
+        ) {
+          updateData.title = title;
+        }
+
+        if (topicId && topicId !== quiz.topicId) {
+          updateData.topicId = topicId;
+        }
+
+        await prisma.quiz.update({
+          where: { id },
+          data: updateData,
+        });
+      }
+    });
+
+    // Fetch the updated quiz with its associated questions
+    const updatedQuiz = await db.quiz.findUnique({
+      where: { id },
+      include: { questions: true },
+    });
+
+    return res
+      .status(200)
+      .json({ message: 'Quiz updated successfully', data: updatedQuiz });
+  } catch (error: any) {
+    console.error(error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const DeleteQuiz = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res.status(400).json({ message: 'Authorization is required' });
+    }
+
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Quiz ID is required' });
+    }
+
+    const quiz = await db.quiz.findUnique({
+      where: { id },
+    });
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    await db.quiz.delete({
+      where: { id },
+    });
+
+    return res.status(200).json({ message: 'Quiz deleted successfully' });
+  } catch (error: any) {
+    console.error(error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const GetQuiz = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Quiz ID is required' });
+    }
+
+    const quiz = await db.quiz.findUnique({
+      where: { id },
+      include: {
+        questions: true,
+        attempts: true,
+      },
+    });
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    return res.status(200).json(quiz);
+  } catch (error: any) {
+    console.error(error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+// delete one or many questions from a quiz
+export const DeleteQuestions = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res.status(400).json({ message: 'Authorization is required' });
+    }
+
+    const { id } = req.params;
+    const { questionIds } = req.body;
+
+    if (!id) {
+      return res.status(400).json({ message: 'Quiz ID is required' });
+    }
+
+    if (
+      !questionIds ||
+      !Array.isArray(questionIds) ||
+      questionIds.length === 0
+    ) {
+      return res.status(400).json({ message: 'Question IDs are required' });
+    }
+
+    const quiz = await db.quiz.findUnique({
+      where: { id },
+    });
+
+    if (!quiz) {
+      return res.status(404).json({ message: 'Quiz not found' });
+    }
+
+    for (const questionId of questionIds) {
+      await db.question.delete({
+        where: { id: questionId },
+      });
+    }
+
+    return res.status(200).json({ message: 'Questions deleted successfully' });
   } catch (error: any) {
     console.error(error.message);
     return res.status(500).json({ message: 'Internal Server Error' });
