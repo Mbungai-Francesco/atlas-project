@@ -6,15 +6,17 @@ import {
   DeleteQuiz,
   DeleteQuestions,
   UpdateQuiz,
+  DeleteQuestion,
 } from '../controllers/QuizController';
 
 const QuizRoutes = express.Router();
 
-QuizRoutes.get('/quiz', GetQuizzes);
-QuizRoutes.post('/quiz', CreateQuiz);
-QuizRoutes.get('/quiz/:id', GetQuiz);
-QuizRoutes.put('/quiz/:id', UpdateQuiz);
-QuizRoutes.delete('/quiz/:id', DeleteQuiz);
-QuizRoutes.delete('/quiz/:id/questions', DeleteQuestions);
+QuizRoutes.get('/quizzes', GetQuizzes);
+QuizRoutes.get('/quizzes/:id', GetQuiz);
+QuizRoutes.post('/quizzes', CreateQuiz);
+QuizRoutes.put('/quizzes/:id', UpdateQuiz);
+QuizRoutes.delete('/quizzes/:id', DeleteQuiz);
+QuizRoutes.delete('/quizzes/:id/questions', DeleteQuestions);
+QuizRoutes.delete('/quizzes/:id/questions/:questionId', DeleteQuestion);
 
 export default QuizRoutes;
