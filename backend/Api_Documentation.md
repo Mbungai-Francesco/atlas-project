@@ -591,10 +591,7 @@ Below are the routes to interact with the database models:
 - **GET** `/api/questions`: Get all questions.
 - **GET** `/api/questions/:id`: Get a question by ID.
 - **POST** `/api/questions`: Create a new question.
-- \*\*PUT
-
-\*\* `/api/questions/:id`: Update a question by ID.
-
+- **PUT** `/api/questions/:id`: Update a question by ID.
 - **DELETE** `/api/questions/:id`: Delete a question by ID.
 
 ### 9. Attempt Routes
