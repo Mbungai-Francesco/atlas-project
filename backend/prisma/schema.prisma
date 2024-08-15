@@ -32,10 +32,10 @@ model User {
   username          String      @unique
   firstname         String?
   secondname        String?
-  classroomId       String[]    @db.ObjectId
+  classroomId       String[]    @db.ObjectId // will be empty for admin
   age               Int?
   email             String      @unique
-  attempt           Attempt[]
+  attempt           Attempt[]                // will be empty for admin
   usertype          UserType    @default(STUDENT)
 
   clerkId           String      @unique
