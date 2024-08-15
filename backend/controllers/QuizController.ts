@@ -83,7 +83,7 @@ export const CreateQuiz = async (req: Request, res: Response) => {
       where: {
         id: quizId,
       },
-      select: {
+      include: {
         questions: true,
       },
     });
