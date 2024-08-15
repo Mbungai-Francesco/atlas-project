@@ -1,5 +1,5 @@
-import Students from "@/components/studProgress/studList";
-import StudProfile from "@/components/studProgress/studProfile";
+import Students from "@/components/teacher/studProgress/studList";
+import StudProfile from "@/components/teacher/studProgress/studProfile";
 import {
   Card,
   CardContent,

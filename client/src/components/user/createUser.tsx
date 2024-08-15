@@ -29,6 +29,7 @@ const CreateUser = () => {
     if (response.status === 200 || response.status === 201) {
       console.log(response.status);
       console.log(response.data)
+      localStorage.setItem("userId",JSON.stringify(response.data.data.id))
       navigate(`/infoForm/${response.data.data.id}`)
     }
   }

@@ -18,10 +18,9 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useUser } from '@clerk/clerk-react';
-import { useParams } from 'react-router-dom';
-import { ClassRoom } from '@/types';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ClassRoom, User } from '@/types';
 import { useEffect, useState } from 'react';
-import { CurrentUser } from '@/routeHooks/currentUser';
 
 const formSchema = z.object({
   age: z.string(),
@@ -32,22 +31,28 @@ const formSchema = z.object({
 
 // Main Inform function
 const InfoForm = () => {
+  const navigate = useNavigate()
 	const { userId } = useParams<{ userId: string }>()
 	const [ data, setData ] = useState<ClassRoom[]>()
 	const { user } = useUser()
+  const [ inUser, setInUser ] = useState<User>()
 
 	useEffect(() => {
 		if(user){
 			getClassrooms()
 		}
-	}, [user])
+	}, [user, inUser])
 
 	// update user
 	const updateUser = async (data : {age: number, classroomId: string[]}) => {
 		try {
-			console.log(userId);
+			// console.log(userId);
       const response = await axios.put(`http://localhost:5000/api/users/${userId}`, data);
-      console.log('Response:', response.data.data);
+      // console.log('Response:', response.data.data);
+      console.log('Response:', response.data);
+      setInUser(response.data.data)
+      navigate('/studentClassrooms')
+      // dispatch({type: 'SET_USER', payload: response.data.data})
     } catch (error) {
       console.error('Error:', error);
     }
@@ -73,15 +78,10 @@ const InfoForm = () => {
 
 	// submit function
 	function onSubmit(data: z.infer<typeof formSchema>) {
-		console.table(data);
+		// console.table(data);
 		const newData = {age: Number(data.age), classroomId: data.classrooms}
 		updateUser(newData)
   }
-
-	const currentUser = CurrentUser()
-
-	console.log(currentUser);
-	
 
 	return (
 		<>

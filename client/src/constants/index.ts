@@ -4,19 +4,22 @@ export const navRoutes = () => {
   const routes = useMemo(
     () => [
       {
-        name: "Students",
-        path: "/",
+        name: "myClassRooms",
+        path: "/myClassrooms",
         icon: "Unplug",
+        type: "TEACHER",
       },
       {
-        name: "Profile",
-        path: "/about",
+        name: "myStudents",
+        path: "/myStudents",
+        icon: "Users",
+        type: "ALL"
+      },
+      {
+        name: "classrooms",
+        path: "/classrooms",
         icon: "User",
-      },
-      {
-        name: "Analysis",
-        path: "/analysis",
-        icon: "ChartNoAxesColumnIncreasing",
+        type: "ALL"
       },
     ],
     []
