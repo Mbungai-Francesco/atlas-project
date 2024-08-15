@@ -8,7 +8,9 @@ import { AuthLayout } from "@/pages/layout";
 import { useAuth } from "@clerk/clerk-react";
 import { cn } from "./lib/utils";
 import CreateUser from "./components/createUser";
-import InfoForm from "./components/infoForm/infoForm";
+import InfoForm from "./components/user/infoForm/infoForm";
+import StudentClassrooms from "./components/user/studClassrooms";
+import ClassRoom from "./components/teacher/classrooms";
 
 const App = () => {
   const { userId } = useAuth();
@@ -22,7 +24,9 @@ const App = () => {
           <div className={cn(userId && "relative calc-height p-6 w-full")}>
             <Routes>
               <Route path="/" index element={<SignInPage />} />
-              <Route path="/student" element={<Student />} />
+              <Route path="/myStudents" element={<Student />} />
+              <Route path="/classrooms" element={<ClassRoom />} />
+              <Route path="/myClassrooms" element={<StudentClassrooms />} />
               <Route path="/about" element={<About />} />
               <Route path="/createUser" element={<CreateUser />} />
               <Route path="/infoForm/:userId" element={<InfoForm />} />
