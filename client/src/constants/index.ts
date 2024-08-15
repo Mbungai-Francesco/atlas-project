@@ -15,6 +15,12 @@ export const navRoutes = () => {
         icon: "Users",
         type: "ALL"
       },
+      {
+        name: "classrooms",
+        path: "/classrooms",
+        icon: "User",
+        type: "ALL"
+      },
     ],
     []
   );
