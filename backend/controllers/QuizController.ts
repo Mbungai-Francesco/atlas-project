@@ -15,6 +15,12 @@ export const CreateQuiz = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'Quiz title is required' });
     }
 
+    if (await db.quiz.findUnique({ where: { title } })) {
+      return res
+        .status(400)
+        .json({ message: 'A quiz with this title already exists' });
+    }
+
     if (!questions || !Array.isArray(questions) || questions.length === 0) {
       return res.status(400).json({ message: 'Quiz questions are required' });
     }
@@ -85,6 +91,26 @@ export const CreateQuiz = async (req: Request, res: Response) => {
     return res
       .status(201)
       .json({ message: 'Quiz created successfully', data: createdQuiz });
+  } catch (error: any) {
+    console.error(error.message);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const GetQuizzes = async (req: Request, res: Response) => {
+  try {
+    const getquizzes = await db.quiz.findMany({
+      include: {
+        questions: true,
+        attempts: true,
+      },
+    });
+
+    if (!getquizzes) {
+      return res.status(400).json({ message: 'Quizzes not found' });
+    }
+
+    return res.status(200).json(getquizzes);
   } catch (error: any) {
     console.error(error.message);
     return res.status(500).json({ message: 'Internal Server Error' });

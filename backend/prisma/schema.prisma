@@ -119,7 +119,7 @@ model Topic {
 // This model refers to the quiz of a topic
 model Quiz {
   id        String     @id @default(auto()) @map("_id") @db.ObjectId
-  title     String
+  title     String      @unique
   topicId   String?     @db.ObjectId  // modified to optional to test the route
   topic     Topic?      @relation(fields: [topicId], references: [id], onDelete: Cascade)
   questions Question[]
