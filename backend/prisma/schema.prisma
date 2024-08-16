@@ -32,7 +32,6 @@ model User {
   username          String      @unique
   firstname         String?
   secondname        String?
-  classroomId       String[]    @db.ObjectId // will be empty for admin
   age               Int?
   email             String      @unique
   attempt           Attempt[]                // will be empty for admin
@@ -41,7 +40,7 @@ model User {
   clerkId           String      @unique
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
-  StudentInClass    StudentsInClass?
+  StudentInClass    StudentsInClass[]
 
 
 }
