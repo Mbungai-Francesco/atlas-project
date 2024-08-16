@@ -32,16 +32,15 @@ model User {
   username          String      @unique
   firstname         String?
   secondname        String?
-  classroomId       String[]    @db.ObjectId
   age               Int?
   email             String      @unique
-  attempt           Attempt[]
+  attempt           Attempt[]                // will be empty for admin
   usertype          UserType    @default(STUDENT)
 
   clerkId           String      @unique
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
-  StudentInClass    StudentsInClass?
+  StudentInClass    StudentsInClass[]
 
 
 }
@@ -105,7 +104,7 @@ model TopicContent {
 // This model refers to the subject of a class
 model Topic {
   id           String         @id @default(auto()) @map("_id") @db.ObjectId
-  name         String
+  name         String         @unique
   classRoomId  String         @db.ObjectId
   classRoom    ClassRoom      @relation(fields: [classRoomId], references: [id], onDelete: Cascade)
   topicContent TopicContent[]
