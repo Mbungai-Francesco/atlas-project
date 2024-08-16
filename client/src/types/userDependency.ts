@@ -1,11 +1,18 @@
+import ClassRoom from "./classRoom"
 import User from "./user"
 
-interface UserState{
-  user: User
+export interface UserState{
+  users: User[]
 }
-interface UserAction {
+export interface UserAction {
   type: string,
   payload: User
 }
 
-export type { UserState, UserAction }
+export interface ClassState{
+  classes: ClassRoom[]
+}
+export interface ClassAction {
+  type: string,
+  payload: ClassRoom
+}

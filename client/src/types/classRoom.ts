@@ -5,11 +5,11 @@ import User from "./user";
 interface ClassRoom {
   id         :string,       //@id @default(auto()) @map("_id") @db.ObjectId
   name       :string,
-  studentIds :string[],    //@db.ObjectId
-  students   :User[],       //@relation(fields: [studentIds], references: [id])
+  studentIds ?:string[],    //@db.ObjectId
+  students   ?:User[],       //@relation(fields: [studentIds], references: [id])
   teacherId  :string[],     //@db.ObjectId
-  teachers   :Teacher[],    //@relation(fields: [teacherId], references: [id])
-  topics     :Topic[],
+  teachers   ?:Teacher[],    //@relation(fields: [teacherId], references: [id])
+  topics     ?:Topic[],
   createdAt  :Date,     //@default(now())
   updatedAt  :Date,    //@updatedAt
 }
