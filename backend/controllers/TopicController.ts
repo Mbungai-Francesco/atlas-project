@@ -1,7 +1,7 @@
 import { db } from '../lib/db';
 import { Request, Response } from 'express';
 
-const CreateTopic = async (req: Request, res: Response) => {
+export const CreateTopic = async (req: Request, res: Response) => {
   try {
     const auth = req.headers.authorization?.split(' ')[1];
 
@@ -55,7 +55,7 @@ const CreateTopic = async (req: Request, res: Response) => {
   }
 };
 
-const GetTopics = async (req: Request, res: Response) => {
+export const GetTopics = async (req: Request, res: Response) => {
   try {
     const gettopics = await db.topic.findMany({
       include: {
@@ -76,7 +76,7 @@ const GetTopics = async (req: Request, res: Response) => {
   }
 };
 
-const UpdateTopic = async (req: Request, res: Response) => {
+export const UpdateTopic = async (req: Request, res: Response) => {
   try {
     const auth = req.headers.authorization?.split(' ')[1];
 
