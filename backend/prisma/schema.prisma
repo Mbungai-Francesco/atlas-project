@@ -34,6 +34,7 @@ model User {
   secondname        String?
   age               Int?
   email             String      @unique
+  classroomId       String[]    @db.ObjectId
   attempt           Attempt[]                // will be empty for admin
   usertype          UserType    @default(STUDENT)
 
@@ -66,7 +67,7 @@ model Teacher {
 
 model StudentsInClass{
   id        String @id @default(auto()) @map("_id") @db.ObjectId
-  studentId String @db.ObjectId @unique
+  studentId String @db.ObjectId
   student   User   @relation(fields: [studentId], references: [id])
   classRoomId String @db.ObjectId
   classRoom   ClassRoom @relation(fields: [classRoomId], references: [id])
