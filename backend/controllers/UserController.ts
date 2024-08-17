@@ -55,7 +55,11 @@ export const CreateUser = async (req: Request, res: Response) => {
 
 export const GetUsers = async (req: Request, res: Response) => {
   try {
-    const getusers = await db.user.findMany();
+    const getusers = await db.user.findMany({
+      include: {
+        StudentInClass: true,
+      },
+    });
 
     if (!getusers) {
       return res.status(400).json({ message: 'users not found' });
@@ -79,6 +83,9 @@ export const GetUser = async (req: Request, res: Response) => {
     const getuser = await db.user.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        StudentInClass: true,
       },
     });
 

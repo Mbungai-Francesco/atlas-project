@@ -6,6 +6,7 @@ import TeacherRoutes from '../routes/TeacherRoutes';
 import Classroomroutes from '../routes/ClassroomRoutes';
 import LoginRoutes from '../routes/Login';
 import QuizRoutes from '../routes/QuizRoutes';
+import TopicRoutes from '../routes/TopicRoutes';
 import cors from 'cors';
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(
   Classroomroutes,
   LoginRoutes,
   QuizRoutes,
+  TopicRoutes,
 );
 
 app.get('*', (req: Request, res: Response) => {
