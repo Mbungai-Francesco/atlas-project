@@ -114,7 +114,12 @@ export const GetMyClassrooms = async (req: Request, res: Response) => {
 
 export const GetClassrooms = async (req: Request, res: Response) => {
   try {
-    const classrooms = await db.classRoom.findMany();
+    const classrooms = await db.classRoom.findMany({
+      include: {
+        topics: true,
+        teachers: true,
+      },
+    });
 
     return res.status(200).json(classrooms);
   } catch (error: any) {
@@ -134,6 +139,10 @@ export const GetClassroom = async (req: Request, res: Response) => {
     const classroom = await db.classRoom.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        topics: true,
+        teachers: true,
       },
     });
 
