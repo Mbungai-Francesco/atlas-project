@@ -7,6 +7,7 @@ import Classroomroutes from '../routes/ClassroomRoutes';
 import LoginRoutes from '../routes/Login';
 import QuizRoutes from '../routes/QuizRoutes';
 import TopicRoutes from '../routes/TopicRoutes';
+// import StudentInClassRoutes from '../routes/StudetnInClassRoutes';
 import cors from 'cors';
 
 const app = express();
@@ -26,6 +27,7 @@ app.use(
   LoginRoutes,
   QuizRoutes,
   TopicRoutes,
+  // StudentInClassRoutes,
 );
 
 app.get('*', (req: Request, res: Response) => {
