@@ -195,6 +195,10 @@ export const UpdateClassroom = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'new values are required' });
     }
 
+    if (!(await db.teacher.findUnique({ where: { id: teacherId } }))) {
+      return res.status(400).json({ message: 'teacher does not exist' });
+    }
+
     if (teacherId) {
       const existingTeachers = findclassroom.teacherId;
 
