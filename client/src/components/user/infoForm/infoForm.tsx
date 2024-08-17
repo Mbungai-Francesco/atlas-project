@@ -19,8 +19,9 @@ import {
 import { Input } from "@/components/ui/input"
 import { useUser } from '@clerk/clerk-react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ClassRoom, User } from '@/types';
 import { useEffect, useState } from 'react';
+import { useDependencyContext } from '@/hooks/useDependencyContext';
+import { ClassRoom } from '@/types';
 
 const formSchema = z.object({
   age: z.string(),
@@ -32,26 +33,31 @@ const formSchema = z.object({
 // Main Inform function
 const InfoForm = () => {
   const navigate = useNavigate()
+  const [ data, setData ] = useState<ClassRoom[]>()
 	const { userId } = useParams<{ userId: string }>()
-	const [ data, setData ] = useState<ClassRoom[]>()
 	const { user } = useUser()
-  const [ inUser, setInUser ] = useState<User>()
+  const { dispatch } = useDependencyContext();
 
 	useEffect(() => {
 		if(user){
 			getClassrooms()
 		}
-	}, [user, inUser])
+	}, [user])
 
 	// update user
 	const updateUser = async (data : {age: number, classroomId: string[]}) => {
 		try {
 			// console.log(userId);
-      const response = await axios.put(`http://localhost:5000/api/users/${userId}`, data);
+      const config = {
+        headers: {
+          authorization: `Bearer ${userId}`
+        }
+      }
+      const response = await axios.put(`http://localhost:5000/api/users/${userId}`, data, config);
       // console.log('Response:', response.data.data);
       console.log('Response:', response.data);
-      setInUser(response.data.data)
-      navigate('/studentClassrooms')
+      dispatch({type: 'SET_USER', payload: response.data.data})
+      navigate('/myClassrooms')
       // dispatch({type: 'SET_USER', payload: response.data.data})
     } catch (error) {
       console.error('Error:', error);

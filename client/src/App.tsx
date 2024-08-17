@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-import { About, Stud, Student, SignInPage, SignUpPage, Welcome } from "@/pages";
+import { About, Stud, Student, SignInPage, SignUpPage } from "@/pages";
 import Sidebar from "@/components/shared/navigation/sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/shared/navigation/navbar";
@@ -10,8 +10,9 @@ import { cn } from "./lib/utils";
 import CreateUser from "./components/user/createUser";
 import InfoForm from "./components/user/infoForm/infoForm";
 import StudentClassrooms from "./components/user/studClassrooms";
-import ClassRoom from "./components/teacher/classroom/classrooms";
-import CreateClassroom from "./components/teacher/classroom/createClassroom";
+import ClassRoom from "./components/teacher/classroom/classroom";
+import ClassRooms from "./components/teacher/classroom/classrooms";
+import Login from "./components/shared/login";
 
 const App = () => {
 	const { userId } = useAuth();
@@ -30,11 +31,14 @@ const App = () => {
 						<Routes>
 							<Route path="/" index element={<SignInPage />} />
 							<Route path="/myStudents" element={<Student />} />
-							<Route path="/classrooms" element={<ClassRoom />} />
+							<Route path="/classrooms">
+								<Route index element={<ClassRooms />} />
+								<Route path="classroom/:classID" element={<ClassRoom />} />
+							</Route>
 							<Route path="/myClassrooms" element={<StudentClassrooms />} />
 							<Route path="/about" element={<About />} />
 							<Route path="/createUser" element={<CreateUser />} />
-							<Route path="/createClassroom" element={<CreateClassroom />} />
+							<Route path="/login" element={<Login />} />
 							<Route path="/infoForm/:userId" element={<InfoForm />} />
 							<Route path="/stud" element={<Stud />} />
 							<Route path="/auth" element={<AuthLayout />}>

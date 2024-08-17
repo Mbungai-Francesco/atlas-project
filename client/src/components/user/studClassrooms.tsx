@@ -8,63 +8,78 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-
-const getClassrooms = (classes:ClassRoom[], ids: string[]) =>{
-  const outClasses : ClassRoom[] = []
-  for (const item of classes) {
-    for (const ele of ids) {
-      if(item.id === ele){
-        outClasses.push(item)
-      }
-    }
-  }
-  return outClasses
-}
+import { useDependencyContext } from "@/hooks/useDependencyContext";
 
 const StudentClassrooms = () => {
 	const [user, setUser] = useState<User>();
-  const [classes, setClasses] = useState<ClassRoom[]>([])
+	const { classState, classDispatch } = useDependencyContext();
+	const { classes } = classState;
+	const id = JSON.parse(localStorage.getItem("userId") || "");
+
+	const getClassrooms = (classes: ClassRoom[], ids: string[]) => {
+		const outClasses: ClassRoom[] = [];
+		for (const item of classes) {
+			for (const ele of ids) {
+				if (item.id === ele) {
+					outClasses.push(item);
+					console.log(item);
+					console.log(classes);
+				}
+			}
+		}
+		classDispatch({ type: "SET_CLASS", payload: outClasses });
+		// console.log(outClasses);
+		// return outClasses;
+	};
+
+	useEffect(()=>{
+		const GetClassrooms = async () => {
+			try {
+				const response = await fetch(`http://localhost:5000/api/classrooms`);
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				if (response.ok) {
+					const data: ClassRoom[] = await response.json();
+					if (user) {
+						getClassrooms(data, user?.classroomId);
+					}
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		if(user){
+			GetClassrooms();
+		}
+		console.log(classes);
+		
+	}, [user])
 
 	useEffect(() => {
-		GetUser();
-	}, [user]);
-
-	const GetUser = async () => {
-		const id = localStorage.getItem("userId");
-		if (!id) {
-			console.log("No user ID found in localStorage");
-			return null;
-		}
-		if (id) {
+		const GetUser = async () => {
 			try {
+				console.log("id", id);
 				const response = await fetch(`http://localhost:5000/api/users/${id}`);
 				if (!response.ok) {
 					throw new Error("Network response was not ok");
 				}
-				const data = await response.json();
-				setUser(data);
-        GetClassrooms()
+				if (response.ok) {
+					const data = await response.json();
+					setUser(data);
+				}
 			} catch (error) {
 				console.log(error);
 			}
+		};
+		if (id) {
+			console.log("id", id);
+			GetUser();
 		}
-	};
-
-  const GetClassrooms = async () => {
-		try {
-      const response = await fetch(`http://localhost:5000/api/classrooms`);
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      const data : ClassRoom[] = await response.json();
-      if(user) {
-        setClasses(getClassrooms(data, user?.classroomId));
-      }
-      
-    } catch (error) {
-      console.log(error);
-    }
-	};
+		if (!id) {
+			console.log("No user ID found in localStorage");
+		}
+	}, [id]);
 
 	return (
 		<>
@@ -73,17 +88,22 @@ const StudentClassrooms = () => {
 					<CardTitle>my Classrooms</CardTitle>
 					<CardDescription>A step at a time, you'll get there</CardDescription>
 				</CardHeader>
-				<CardContent className="flex space-x-4">
-          {classes.map(classin => (
-            <Card>
-            <CardHeader>
-              <CardTitle>{classin.name}</CardTitle>
-            </CardHeader>
-          </Card>
-          ))}
-				</CardContent>
-				<CardFooter>
-				</CardFooter>
+				{
+					<CardContent className="flex space-x-4">
+						<p className={classes.length == 0 ? "block" : "hidden"}>
+							loading ...
+						</p>
+						{classes.map((classin) => (
+							<Card key={classin.id}>
+								<CardHeader>
+									<CardTitle>{classin.name}</CardTitle>
+									<CardDescription>topics {classin.topics ? classin.topics.length  : "0"}</CardDescription>
+								</CardHeader>
+							</Card>
+						))}
+					</CardContent>
+				}
+				<CardFooter></CardFooter>
 			</Card>
 		</>
 	);

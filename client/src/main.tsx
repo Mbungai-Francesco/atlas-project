@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
 				afterSignOutUrl="/auth/sign-in"
 				signInUrl="/auth/sign-in"
 				signUpUrl="/auth/sign-up"
-				signInFallbackRedirectUrl={"/student"}
+				signInFallbackRedirectUrl={"/login"}
 				signUpFallbackRedirectUrl={"/createUser"}
 				appearance={{
 					baseTheme: dark,
