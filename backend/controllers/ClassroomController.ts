@@ -195,12 +195,31 @@ export const UpdateClassroom = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'new values are required' });
     }
 
-    if (!(await db.teacher.findUnique({ where: { id: teacherId } }))) {
-      return res.status(400).json({ message: 'teacher does not exist' });
-    }
-
     if (teacherId) {
+      teacherId.forEach(async (id: string) => {
+        const teacher = await db.teacher.findUnique({
+          where: {
+            id: id,
+          },
+        });
+
+        if (!teacher) {
+          return res
+            .status(400)
+            .json({ message: 'one or many teachers not found' });
+        }
+      });
+
       const existingTeachers = findclassroom.teacherId;
+
+      // verify if teacherId already exists in the classroom
+      for (let i = 0; i < teacherId.length; i++) {
+        if (existingTeachers.includes(teacherId[i])) {
+          return res.status(400).json({
+            message: 'one or many teachers already in the classroom',
+          });
+        }
+      }
 
       updatedTeacherIds = [...(existingTeachers || []), ...teacherId].filter(
         Boolean,
