@@ -7,19 +7,19 @@ export const navRoutes = () => {
         name: "myClassRooms",
         path: "/myClassrooms",
         icon: "Unplug",
-        type: "TEACHER",
+        type: "stud",
       },
       {
         name: "myStudents",
         path: "/myStudents",
         icon: "Users",
-        type: "ALL"
+        type: "teach"
       },
       {
         name: "classrooms",
         path: "/classrooms",
         icon: "User",
-        type: "ALL"
+        type: "teach"
       },
     ],
     []
