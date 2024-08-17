@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import {
 	Popover,
@@ -19,7 +19,6 @@ import {
 import CreateClassroom from "./createClassroom";
 import { useDependencyContext } from "@/hooks/useDependencyContext";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 const ClassRooms = () => {
 	const [teacher, setTeacher] = useState<Teacher>();
@@ -114,9 +113,6 @@ const ClassRooms = () => {
 									</CardDescription>
 								</CardHeader>
 							</Link>
-							<Button className="self-end">
-								<Trash2 />
-							</Button>
 						</Card>
 					))}
 					<Popover open={openPopover} onOpenChange={setOpenPopover}>

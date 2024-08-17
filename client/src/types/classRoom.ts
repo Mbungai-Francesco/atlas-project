@@ -8,7 +8,7 @@ interface ClassRoom {
   students   ?:User[],       //@relation(fields: [studentIds], references: [id])
   teacherId  :string[],     //@db.ObjectId
   teachers   ?:Teacher[],    //@relation(fields: [teacherId], references: [id])
-  topics     ?:Topic[],
+  topics     :Topic[] ,
   createdAt  :Date,     //@default(now())
   updatedAt  :Date,    //@updatedAt
 }

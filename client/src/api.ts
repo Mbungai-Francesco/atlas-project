@@ -55,10 +55,9 @@ export const updateClassroom = async (clerkId: string, classRoom:ClassRoom, teac
         authorization: `Bearer ${clerkId}`
       }
     }
-    const {id,teachers,students,teacherId,createdAt,updatedAt, ...classNoId} = classRoom
-    console.log(id,teachers,students,teacherId,createdAt,updatedAt);
+    const {id,teachers,students,createdAt,updatedAt, ...classNoId} = classRoom
+    console.log(id,teachers,students,createdAt,updatedAt);
     const data ={
-      teacherId: teachId,
       ...classNoId
     }
     console.log(data);
@@ -111,7 +110,7 @@ export const updateTeacher = async (clerkId: string, data : Teacher) => {
   try{
     const { id,classrooms, ...dataNoId } = data;
     console.log(id,classrooms);
-    const res = await axios.put(`http://localhost:5000/api/teachers/${clerkId}`,dataNoId)
+    const res = await axios.put(`http://localhost:5000/api/teachers/${id}`,dataNoId)
     if(res.status === 200){
       console.log("message", res.statusText);
       return res.data.data as Teacher

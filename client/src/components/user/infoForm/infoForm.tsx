@@ -77,6 +77,7 @@ const InfoForm = () => {
 				if (res) {
 					console.log(res);
 					res.age = newData;
+					res.classroomId = data.classrooms
 					updateUser(userId, res).then((inres) => {
 						console.log(inres);
 						if (inres) {
