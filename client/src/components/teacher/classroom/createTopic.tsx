@@ -15,27 +15,26 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useDependencyContext } from "@/hooks/useDependencyContext";
-import { createClassroom, getTeacher, updateTeacher } from "@/api";
-import { Topic } from "@/types";
+import { createTopic, updateClassroom } from "@/api";
+import { useClerk } from "@clerk/clerk-react";
+import { ClassRoom } from "@/types";
 
 const formSchema = z.object({
 	name: z.string().min(2, {
-		message: "class name must be at least 2 characters.",
+		message: "topic name must be at least 2 characters.",
 	}),
 });
 
-interface classroomProps {
+interface topicProps {
 	setOpenPopover: (value: boolean) => void;
-	clerkID: string | undefined;
-	profID: string | null;
+	classroom: ClassRoom;
 }
 
-const CreateClassroom = ({
-	setOpenPopover,
-	clerkID,
-	profID,
-}: classroomProps) => {
-	const { classDispatch } = useDependencyContext();
+const CreateTopic = ({ setOpenPopover, classroom }: topicProps) => {
+	const { user } = useClerk();
+	const id = localStorage.getItem("teacherId") || "";
+	const { classState, classDispatch } = useDependencyContext();
+	const { classes } = classState;
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -49,30 +48,29 @@ const CreateClassroom = ({
 		// Do something with the form values.s
 		// ✅ This will be type-safe and validated.
 		console.log(values);
-		createClass(values.name);
-	}
-
-	const createClass = async (className: string) => {
-		// const authorizationHeader = `Bearer user_2kZLrxldPINZN0bFzL9j11WOPyr`;
-		const emptyTopic : Topic[] = []
-		if (clerkID && profID)
-			createClassroom(clerkID, { name: className, teacherId: profID, topic: emptyTopic }).then(
-				(res) => {
-					if (res) {
-						classDispatch({ type: "ADD_CLASS", payload: res });
-						getTeacher(profID).then((inres) => {
-							if (inres) {
-								inres.classroomId.push(res.id);
-								updateTeacher(clerkID, inres).then((upres) => {
-									if (upres) console.log("Teacher updated");
-								});
-							}
-						});
-						setOpenPopover(false);
-					}
+		if (user) {
+			createTopic(user.id, {
+				name: values.name,
+				classRoomId: classroom.id,
+			}).then((res) => {
+				if (res) {
+					console.log("id", id);
+					classroom.topics?.push(res);
+					updateClassroom(user.id, classroom, id).then((inres) => {
+						if (inres) {
+							classDispatch({ type: "UPDATE_CLASS", payload: inres });
+							console.log(classes);
+							setOpenPopover(false);
+						} else {
+							return null;
+						}
+					});
+				} else {
+					return null;
 				}
-			);
-	};
+			});
+		}
+	}
 
 	return (
 		<>
@@ -83,9 +81,9 @@ const CreateClassroom = ({
 						name="name"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Class name</FormLabel>
+								<FormLabel>Topic name</FormLabel>
 								<FormControl>
-									<Input placeholder="Classroom name" {...field} />
+									<Input placeholder="Topic name" {...field} />
 								</FormControl>
 								{/* <FormDescription>
 									This is your public display name.
@@ -104,4 +102,4 @@ const CreateClassroom = ({
 	);
 };
 
-export default CreateClassroom;
+export default CreateTopic;

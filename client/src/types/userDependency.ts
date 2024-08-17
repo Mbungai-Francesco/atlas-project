@@ -6,7 +6,7 @@ export interface UserState{
 }
 export interface UserAction {
   type: string,
-  payload: User
+  payload: User | User[]
 }
 
 export interface ClassState{
@@ -14,5 +14,5 @@ export interface ClassState{
 }
 export interface ClassAction {
   type: string,
-  payload: ClassRoom
+  payload: ClassRoom | ClassRoom[]
 }

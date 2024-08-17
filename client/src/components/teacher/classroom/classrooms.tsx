@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 
 import {
 	Popover,
@@ -19,6 +19,7 @@ import {
 import CreateClassroom from "./createClassroom";
 import { useDependencyContext } from "@/hooks/useDependencyContext";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const ClassRooms = () => {
 	const [teacher, setTeacher] = useState<Teacher>();
@@ -31,7 +32,7 @@ const ClassRooms = () => {
 
 	useEffect(() => {
 		console.log("id", id);
-		if (id) {
+		if (id && teacher) {
 			const GetClassrooms = async () => {
 				try {
 					const authorizationHeader = `Bearer ${teacher?.clerkId}`;
@@ -88,7 +89,9 @@ const ClassRooms = () => {
 				}
 			}
 		};
-		GetTeacher().then((res) => (res ? setTeacher(res) : null));
+		if (id) {
+			GetTeacher().then((res) => (res ? setTeacher(res) : null));
+		}
 	}, [id]);
 
 	return (
@@ -102,14 +105,19 @@ const ClassRooms = () => {
 				<p>{teacher?.clerkId}</p> */}
 				<CardContent className="flex space-x-4">
 					{classes.map((classin, id) => (
-						<Link to={`classroom/${classin.id}`} key={id}>
-							<Card>
+						<Card className="flex ">
+							<Link to={`classroom/${classin.id}`} key={id}>
 								<CardHeader>
 									<CardTitle>{classin.name}</CardTitle>
-                  <CardDescription>topics {classin.topics ? classin.topics.length  : "0"}</CardDescription>
+									<CardDescription>
+										topics {classin.topics ? classin.topics.length : "0"}
+									</CardDescription>
 								</CardHeader>
-							</Card>
-						</Link>
+							</Link>
+							<Button className="self-end">
+								<Trash2 />
+							</Button>
+						</Card>
 					))}
 					<Popover open={openPopover} onOpenChange={setOpenPopover}>
 						<PopoverTrigger>

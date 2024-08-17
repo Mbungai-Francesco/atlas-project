@@ -41,6 +41,7 @@ const StudentClassrooms = () => {
 				}
 				if (response.ok) {
 					const data: ClassRoom[] = await response.json();
+					console.log(data);
 					if (user) {
 						getClassrooms(data, user?.classroomId);
 					}
@@ -66,6 +67,7 @@ const StudentClassrooms = () => {
 				}
 				if (response.ok) {
 					const data = await response.json();
+					console.log(data);
 					setUser(data);
 				}
 			} catch (error) {

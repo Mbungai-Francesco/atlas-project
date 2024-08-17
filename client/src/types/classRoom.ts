@@ -5,7 +5,6 @@ import User from "./user";
 interface ClassRoom {
   id         :string,       //@id @default(auto()) @map("_id") @db.ObjectId
   name       :string,
-  studentIds ?:string[],    //@db.ObjectId
   students   ?:User[],       //@relation(fields: [studentIds], references: [id])
   teacherId  :string[],     //@db.ObjectId
   teachers   ?:Teacher[],    //@relation(fields: [teacherId], references: [id])

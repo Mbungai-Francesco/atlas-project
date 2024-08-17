@@ -1,3 +1,4 @@
+import { StudentsInClass } from "."
 import Attempt from "./attempt"
 import ClassRoom from "./classRoom"
 import UserType from "./userType"
@@ -17,6 +18,7 @@ interface User{
   clerkId     :string,      //@unique
   createdAt   :Date,    //@default(now())
   updatedAt   :Date,
+  StudentInClass :StudentsInClass[] //@relation("StudentInClass")
 }
 
 export default User
