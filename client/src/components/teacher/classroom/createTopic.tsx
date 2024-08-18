@@ -55,7 +55,7 @@ const CreateTopic = ({ setOpenPopover, classroom }: topicProps) => {
 			}).then((res) => {
 				if (res) {
 					console.log("id", id);
-					classroom.topics.push(res);
+					classroom.topics?.push(res);
 					updateClassroom(user.id, classroom, id).then((inres) => {
 						if (inres) {
 							classDispatch({ type: "UPDATE_CLASS", payload: inres });

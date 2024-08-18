@@ -73,6 +73,40 @@ export const updateClassroom = async (clerkId: string, classRoom:ClassRoom, teac
   }
 }
 
+export const  getClassrooms = async() =>{
+  try {
+    const response = await axios.get("http://localhost:5000/api/classrooms")
+    if(response.status === 200){
+      console.log("message", response.statusText);
+      console.log(response.data);
+      return response.data as ClassRoom[]
+    }
+    else console.log("message", response.statusText);
+  } catch (error) {
+    console.log(error);
+    return null
+  }
+}
+
+export const getMyClassrooms = async (clerkId: string) =>{
+  try{
+    const config = {
+      headers: {
+        authorization: `Bearer ${clerkId}`
+      }
+    }
+    const res = await axios.get(`http://localhost:5000/api/myclassrooms`,config)
+    if(res.status === 200){
+      console.log("message", res.statusText);
+      console.log(res.data);
+      return res.data as ClassRoom[]
+    }
+  }
+  catch(error){
+    console.error('Error:', error);
+  }
+}
+
 export const teacherClasses = async (clerkId: string) =>{
   try{
     const config = {

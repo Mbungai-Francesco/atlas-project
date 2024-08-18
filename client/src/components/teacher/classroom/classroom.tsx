@@ -1,5 +1,5 @@
 import { useDependencyContext } from "@/hooks/useDependencyContext";
-import { ClassRoom } from "@/types";
+import { ClassRoom, Topic } from "@/types";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -64,10 +64,17 @@ const Classroom = () => {
 
 	useEffect(() => {
 		console.log("classID", classID);
+		const topics : Topic[] = []
+		let room : ClassRoom
+		console.log('classes', classes);
 		for (const item of classes) {
 			if (item.id === classID) {
-				const { ...room} = item
+				if(!item.topics){ room = {...item, topics}}
+				else room = {...item}
+				console.log(room);
 				setClassroom(room);
+				console.log("classroom", classroom);
+				
 			}
 		}
 	}, [classes]);

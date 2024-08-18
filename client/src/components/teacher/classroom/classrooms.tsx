@@ -19,6 +19,7 @@ import {
 import CreateClassroom from "./createClassroom";
 import { useDependencyContext } from "@/hooks/useDependencyContext";
 import { Link } from "react-router-dom";
+import { getMyClassrooms } from "@/api";
 
 const ClassRooms = () => {
 	const [teacher, setTeacher] = useState<Teacher>();
@@ -32,37 +33,45 @@ const ClassRooms = () => {
 	useEffect(() => {
 		console.log("id", id);
 		if (id && teacher) {
-			const GetClassrooms = async () => {
-				try {
-					const authorizationHeader = `Bearer ${teacher?.clerkId}`;
-					// const authorizationHeader = "user_2kZLrxldPINZN0bFzL9j11WOPyr";
-					console.log("Authorization Header:", authorizationHeader); // Log the authorization header
-					const response = await fetch(
-						`http://localhost:5000/api/myclassrooms`,
-						{
-							method: "GET",
-							headers: {
-								"Content-Type": "application/json",
-								authorization: authorizationHeader,
-							},
-						}
-					);
-					if (!response.ok) {
-						throw new Error("Network response was not ok");
-					} else if (response.ok) {
-						console.log("Response is OK");
-						const data: classType[] = await response.json();
-						if (teacher) {
-							classDispatch({ type: "SET_CLASS", payload: data });
-							console.log(data);
-						}
+			getMyClassrooms(teacher.clerkId).then((res) =>{
+				if(res){
+					if(teacher) {
+						console.log(res);
+						classDispatch({ type: "SET_CLASS", payload: res });
 					}
-				} catch (error) {
-					console.log(error);
 				}
-			};
+			})
+			// const GetClassrooms = async () => {
+			// 	try {
+			// 		const authorizationHeader = `Bearer ${teacher?.clerkId}`;
+			// 		// const authorizationHeader = "user_2kZLrxldPINZN0bFzL9j11WOPyr";
+			// 		console.log("Authorization Header:", authorizationHeader); // Log the authorization header
+			// 		const response = await fetch(
+			// 			`http://localhost:5000/api/myclassrooms`,
+			// 			{
+			// 				method: "GET",
+			// 				headers: {
+			// 					"Content-Type": "application/json",
+			// 					authorization: authorizationHeader,
+			// 				},
+			// 			}
+			// 		);
+			// 		if (!response.ok) {
+			// 			throw new Error("Network response was not ok");
+			// 		} else if (response.ok) {
+			// 			console.log("Response is OK");
+			// 			const data: classType[] = await response.json();
+			// 			if (teacher) {
+			// 				classDispatch({ type: "SET_CLASS", payload: data });
+			// 				console.log(data);
+			// 			}
+			// 		}
+			// 	} catch (error) {
+			// 		console.log(error);
+			// 	}
+			// };
 
-			GetClassrooms();
+			// GetClassrooms();
 			console.log("Teacher:", teacher);
 		}
 	}, [id, teacher]);

@@ -1,4 +1,5 @@
 import ClassRoom from "./classRoom"
+import Topic from "./topic"
 import User from "./user"
 
 export interface UserState{
@@ -15,4 +16,12 @@ export interface ClassState{
 export interface ClassAction {
   type: string,
   payload: ClassRoom | ClassRoom[]
+}
+
+export interface TopicState{
+  topics: Topic[]
+}
+export interface TopicAction {
+  type: string,
+  payload: Topic | Topic[]
 }
