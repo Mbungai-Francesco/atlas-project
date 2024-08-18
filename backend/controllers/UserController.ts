@@ -211,7 +211,7 @@ export const UpdateUser = async (req: Request, res: Response) => {
 
 // delete user to be implemented for admin only
 
-const DeleteUser = async (req: Request, res: Response) => {
+export const DeleteUser = async (req: Request, res: Response) => {
   try {
     const auth = req.headers.authorization?.split(' ')[1];
     if (!auth) {
