@@ -103,6 +103,9 @@ export const GetMyClassrooms = async (req: Request, res: Response) => {
           hasSome: [teacher.id],
         },
       },
+      include: {
+        topics: true,
+      },
     });
 
     return res.status(200).json(classrooms);
