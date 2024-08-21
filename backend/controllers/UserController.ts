@@ -38,6 +38,29 @@ export const CreateUser = async (req: Request, res: Response) => {
     };
 
     if (usertype) {
+      const auth = req.headers.authorization?.split(' ')[1];
+      if (!auth) {
+        return res
+          .status(400)
+          .json({ message: 'admin authorization is required' });
+      }
+
+      const finduser = await db.user.findUnique({
+        where: {
+          clerkId: auth,
+        },
+      });
+
+      if (!finduser) {
+        return res.status(400).json({ message: 'admin not found' });
+      }
+
+      if (finduser.usertype !== 'ADMIN') {
+        return res.status(400).json({
+          message: 'only admin can create user with usertype',
+        });
+      }
+
       toUpdate['usertype'] = usertype;
     }
 
