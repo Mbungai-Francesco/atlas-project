@@ -1,0 +1,26 @@
+const fs = require('fs');
+
+const vercelConfig = {
+  version: 2,
+  builds: [
+    {
+      src: 'server.ts',
+      use: '@vercel/node'
+    }
+  ],
+  routes: [
+    {
+      src: '/(.*)',
+      dest: 'server.ts'
+    }
+  ]
+};
+
+fs.writeFile('vercel.json', JSON.stringify(vercelConfig, null, 2), (err) => {
+  if (err) {
+    console.error('Error writing vercel.json:', err);
+  } else {
+    console.log('vercel.json created successfully!');
+  }
+});
+
