@@ -11,7 +11,7 @@ export const CreateUser = async (req: Request, res: Response) => {
       });
     }
 
-    if (!username || !email || !usertype) {
+    if (!username || !email) {
       return res.status(400).json({
         message:
           'username, email and usertype are required. please try again with these values added',
@@ -31,12 +31,42 @@ export const CreateUser = async (req: Request, res: Response) => {
         .json({ message: 'user already exists', data: finduser });
     }
 
+    const toUpdate: any = {
+      username,
+      email,
+      clerkId,
+    };
+
+    if (usertype) {
+      const auth = req.headers.authorization?.split(' ')[1];
+      if (!auth) {
+        return res
+          .status(400)
+          .json({ message: 'admin authorization is required' });
+      }
+
+      const finduser = await db.user.findUnique({
+        where: {
+          clerkId: auth,
+        },
+      });
+
+      if (!finduser) {
+        return res.status(400).json({ message: 'admin not found' });
+      }
+
+      if (finduser.usertype !== 'ADMIN') {
+        return res.status(400).json({
+          message: 'only admin can create user with usertype',
+        });
+      }
+
+      toUpdate['usertype'] = usertype;
+    }
+
     const createuser = await db.user.create({
       data: {
-        username,
-        email,
-        clerkId,
-        usertype,
+        ...toUpdate,
       },
     });
 
