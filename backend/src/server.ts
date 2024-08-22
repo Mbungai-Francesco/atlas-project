@@ -7,6 +7,7 @@ import Classroomroutes from '../routes/ClassroomRoutes';
 import LoginRoutes from '../routes/Login';
 import QuizRoutes from '../routes/QuizRoutes';
 import TopicRoutes from '../routes/TopicRoutes';
+import Adminrouter from '../routes/AdminRoutes';
 // import StudentInClassRoutes from '../routes/StudetnInClassRoutes';
 import cors from 'cors';
 
@@ -27,6 +28,7 @@ app.use(
   LoginRoutes,
   QuizRoutes,
   TopicRoutes,
+  Adminrouter,
   // StudentInClassRoutes,
 );
 
