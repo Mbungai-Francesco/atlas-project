@@ -31,7 +31,7 @@ export const CreateUser = async (req: Request, res: Response) => {
         .json({ message: 'user already exists', data: finduser });
     }
 
-    const toUpdate: any = {
+    const values: any = {
       username,
       email,
       clerkId,
@@ -61,12 +61,12 @@ export const CreateUser = async (req: Request, res: Response) => {
         });
       }
 
-      toUpdate['usertype'] = usertype;
+      values['usertype'] = usertype;
     }
 
     const createuser = await db.user.create({
       data: {
-        ...toUpdate,
+        ...values,
       },
     });
 
@@ -238,4 +238,3 @@ export const UpdateUser = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'internal server error' });
   }
 };
-
