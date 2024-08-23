@@ -198,3 +198,39 @@ export const GetTopicContent = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const DeleteTopicContent = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res
+        .status(400)
+        .json({ message: 'missing authorization header for teacher' });
+    }
+
+    if (!(await db.teacher.findUnique({ where: { clerkId: auth } }))) {
+      return res.status(401).json({ message: 'unauthorized user' });
+    }
+
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'missing topic content id' });
+    }
+
+    const deletedTopicContent = await db.topicContent.delete({
+      where: { id },
+    });
+
+    if (!deletedTopicContent) {
+      return res.status(404).json({ message: 'topic content not found' });
+    }
+
+    return res
+      .status(200)
+      .json({ message: 'topic content deleted successfully' });
+  } catch (error: any) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
