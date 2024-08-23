@@ -63,7 +63,7 @@ const CreateClassroom = ({
 						getTeacher(profID).then((inres) => {
 							if (inres) {
 								inres.classroomId.push(res.id);
-								updateTeacher(clerkID, inres).then((upres) => {
+								updateTeacher(inres).then((upres) => {
 									if (upres) console.log("Teacher updated");
 								});
 							}

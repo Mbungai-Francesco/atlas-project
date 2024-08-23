@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ClassRoom, Teacher, Topic, User } from "./types"
+import { ClassRoom, Quiz, Teacher, Topic, User, UserType } from "./types"
 
 interface topicProps{
   name: string,
@@ -48,7 +48,7 @@ export const deleteClassroom = async (clerkId: string, classId: string) =>{
   }
 }
 
-export const updateClassroom = async (clerkId: string, classRoom:ClassRoom, teachId: string) =>{
+export const updateClassroom = async (clerkId: string, classRoom:ClassRoom) =>{
   try{
     const config = {
       headers: {
@@ -77,7 +77,6 @@ export const  getClassrooms = async() =>{
   try {
     const response = await axios.get("http://localhost:5000/api/classrooms")
     if(response.status === 200){
-      console.log("message", response.statusText);
       console.log(response.data);
       return response.data as ClassRoom[]
     }
@@ -104,6 +103,40 @@ export const getMyClassrooms = async (clerkId: string) =>{
   }
   catch(error){
     console.error('Error:', error);
+  }
+}
+
+export const newQuiz = async (clerkId: string, title: string, topicId: string ) =>{
+  try{
+    const config = {
+      headers: {
+        authorization: `Bearer ${clerkId}`
+      }
+    }
+    const res = await axios.post(`http://localhost:5000/api/quizzes`,{ title, topicId},config)
+    if(res.status === 201){
+      console.log("message", res.statusText);
+      console.log(res.data.data);
+      return res.data.data as Quiz
+    }
+  }
+  catch(error){
+    console.error('Error:', error);
+  }
+}
+
+export const getQuizzes = async () =>{
+  try{
+    const res = await axios.get(`http://localhost:5000/api/quizzes`)
+    if(res.status === 200){
+      console.log("message", res.statusText);
+      console.log(res.data);
+      return res.data as Quiz[]
+    }
+  }
+  catch(error){
+    console.error('Error:', error);
+    return null
   }
 }
 
@@ -140,7 +173,7 @@ export const getTeacher = async (teachId: string) => {
   }
 }
 
-export const updateTeacher = async (clerkId: string, data : Teacher) => {
+export const updateTeacher = async ( data : Teacher) => {
   try{
     const { id,classrooms, ...dataNoId } = data;
     console.log(id,classrooms);
@@ -190,17 +223,35 @@ export const getTopics = async () =>{
   }
 }
 
+export const newUser = async (data:{username: string,email: string,clerkId: string}) => {
+  try {
+    const data2 = { ...data, userType: UserType.STUDENT }
+    const res = await axios.post("http://localhost:5000/api/users", data2);
+    if(res.status === 201){
+      console.log("message", res.statusText);
+      console.log(res.data.data);
+      return res.data.data as User
+    }
+    else console.log("message", res.statusText);
+  } catch (error) {
+    console.error('Error:', error);
+    return null
+  }
+}
+
 export const updateUser = async (userId: string,data : User) => {
   try {
     // console.log(userId);
+    
+    const { id,StudentInClass,clerkId, ...body } = data;
     const config = {
       headers: {
-        authorization: `Bearer ${userId}`
+        authorization: `Bearer ${clerkId}`
       }
     }
-    const { id,StudentInClass, ...dataNoId } = data;
     console.log(id,StudentInClass);
-    const res = await axios.put(`http://localhost:5000/api/users/${userId}`, dataNoId, config);
+    console.log(body);
+    const res = await axios.put(`http://localhost:5000/api/users/${userId}`, body, config);
     if(res.status === 200){
       console.log("message", res.statusText);
       return res.data.data as User

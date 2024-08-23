@@ -14,8 +14,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useDependencyContext } from "@/hooks/useDependencyContext";
-import { createTopic, updateClassroom } from "@/api";
+import { createTopic } from "@/api";
 import { useClerk } from "@clerk/clerk-react";
 import { ClassRoom } from "@/types";
 
@@ -33,8 +32,6 @@ interface topicProps {
 const CreateTopic = ({ setOpenPopover, classroom }: topicProps) => {
 	const { user } = useClerk();
 	const id = localStorage.getItem("teacherId") || "";
-	const { classState, classDispatch } = useDependencyContext();
-	const { classes } = classState;
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -56,15 +53,7 @@ const CreateTopic = ({ setOpenPopover, classroom }: topicProps) => {
 				if (res) {
 					console.log("id", id);
 					classroom.topics?.push(res);
-					updateClassroom(user.id, classroom, id).then((inres) => {
-						if (inres) {
-							classDispatch({ type: "UPDATE_CLASS", payload: inres });
-							console.log(classes);
-							setOpenPopover(false);
-						} else {
-							return null;
-						}
-					});
+					setOpenPopover(false);
 				} else {
 					return null;
 				}
@@ -85,9 +74,6 @@ const CreateTopic = ({ setOpenPopover, classroom }: topicProps) => {
 								<FormControl>
 									<Input placeholder="Topic name" {...field} />
 								</FormControl>
-								{/* <FormDescription>
-									This is your public display name.
-								</FormDescription> */}
 								<FormMessage />
 							</FormItem>
 						)}

@@ -24,6 +24,7 @@ import { useDependencyContext } from "@/hooks/useDependencyContext";
 import { ClassRoom } from "@/types";
 import { getUser, updateUser } from "@/api";
 
+
 const formSchema = z.object({
 	age: z.string(),
 	classrooms: z
@@ -77,8 +78,9 @@ const InfoForm = () => {
 				if (res) {
 					console.log(res);
 					res.age = newData;
-					res.classroomId = data.classrooms
-					updateUser(userId, res).then((inres) => {
+					res.classroomId = data.classrooms;
+					// console.log(res);
+					updateUser(userId,res).then((inres) => {
 						console.log(inres);
 						if (inres) {
 							dispatch({ type: "SET_USER", payload: inres });
@@ -151,10 +153,10 @@ const InfoForm = () => {
 																return checked
 																	? field.onChange([...field.value, item.id])
 																	: field.onChange(
-																			field.value?.filter(
-																				(value) => value !== item.id
-																			)
-																	  );
+																		field.value?.filter(
+																			(value) => value !== item.id
+																		)
+																	);
 															}}
 														/>
 													</FormControl>

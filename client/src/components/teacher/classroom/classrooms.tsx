@@ -1,4 +1,4 @@
-import { ClassRoom as classType, Teacher } from "@/types";
+import { Teacher } from "@/types";
 import { useEffect, useState } from "react";
 import {
 	Card,
@@ -32,7 +32,9 @@ const ClassRooms = () => {
 
 	useEffect(() => {
 		console.log("id", id);
-		if (id && teacher) {
+		console.log('classes', classes);
+		
+		if (id && teacher && classes.length ===0) {
 			getMyClassrooms(teacher.clerkId).then((res) =>{
 				if(res){
 					if(teacher) {
@@ -113,8 +115,8 @@ const ClassRooms = () => {
 				<p>{teacher?.clerkId}</p> */}
 				<CardContent className="flex space-x-4">
 					{classes.map((classin, id) => (
-						<Card className="flex ">
-							<Link to={`classroom/${classin.id}`} key={id}>
+						<Card className="flex " key={id}>
+							<Link to={`${classin.id}`} >
 								<CardHeader>
 									<CardTitle>{classin.name}</CardTitle>
 									<CardDescription>

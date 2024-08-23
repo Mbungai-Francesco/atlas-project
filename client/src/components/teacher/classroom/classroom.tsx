@@ -1,7 +1,7 @@
 import { useDependencyContext } from "@/hooks/useDependencyContext";
 import { ClassRoom, Topic } from "@/types";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import {
 	Card,
@@ -30,51 +30,62 @@ import CreateTopic from "./createTopic";
 import { deleteClassroom, getTeacher, updateTeacher } from "@/api";
 import { useClerk } from "@clerk/clerk-react";
 
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const Classroom = () => {
-	const { user } = useClerk()
+	const { user } = useClerk();
 	const teachId = localStorage.getItem("teacherId");
+	// const [ classID, setClassID ] = useState<string>('')
 	const { classID } = useParams<{ classID: string }>();
 	const [classroom, setClassroom] = useState<ClassRoom>();
 	const { classState, classDispatch } = useDependencyContext();
 	const { classes } = classState;
 	const [openPopover, setOpenPopover] = useState(false);
-	const [openPopover2, setOpenPopover2] = useState(false);
-	const navigate = useNavigate()
+	const [delClassOpenPopover, setDelClassOpenPopover] = useState(false);
+	const navigate = useNavigate();
 
-	const deleteClass = () =>{
-		if(user && classID){
-			deleteClassroom(user.id,classID).then((res) =>{
-				if(res){
-					console.log('res', res);
-					classDispatch({type: 'DELETE_CLASS', payload: res})
-					if(teachId){
-						getTeacher(teachId).then((res) =>{
-							if(res){
-								res.classroomId = res.classroomId.filter(item => item !== classID)
-								updateTeacher(user.id,res)
+	const deleteClass = () => {
+		if (user && classID) {
+			deleteClassroom(user.id, classID).then((res) => {
+				if (res) {
+					console.log("res", res);
+					classDispatch({ type: "DELETE_CLASS", payload: res });
+					if (teachId) {
+						getTeacher(teachId).then((res) => {
+							if (res) {
+								res.classroomId = res.classroomId.filter(
+									(item) => item !== classID
+								);
+								updateTeacher(user.id, res);
 							}
-						})
+						});
 					}
-					navigate('/classrooms')
+					navigate("/classrooms");
 				}
-			})
+			});
 		}
-		
-	}
+	};
 
 	useEffect(() => {
 		console.log("classID", classID);
-		const topics : Topic[] = []
-		let room : ClassRoom
-		console.log('classes', classes);
+		const topics: Topic[] = [];
+		let room: ClassRoom;
+		console.log("classes", classes);
 		for (const item of classes) {
 			if (item.id === classID) {
-				if(!item.topics){ room = {...item, topics}}
-				else room = {...item}
+				if (!item.topics) {
+					room = { ...item, topics };
+				} else room = { ...item };
 				console.log(room);
 				setClassroom(room);
 				console.log("classroom", classroom);
-				
 			}
 		}
 	}, [classes]);
@@ -82,9 +93,9 @@ const Classroom = () => {
 	return (
 		<>
 			{classroom && (
-				<div className="flex flex-col space-y-4">
-					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 ">
-						<Card>
+				<div className="flex flex-col space-y-4 justify-between h-full">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-[85%]">
+						<Card className="h-fit max-h-full">
 							<CardHeader>
 								<CardTitle>{classroom?.name}</CardTitle>
 								{/* <CardDescription>Card Description</CardDescription> */}
@@ -101,17 +112,17 @@ const Classroom = () => {
 											</TableHead>
 										</TableRow>
 									</TableHeader>
-									<TableBody>
+									<TableBody className="h-full">
 										{classroom?.topics?.map((topic) => (
 											<TableRow key={topic.id}>
 												<TableCell className="font-medium">
 													{topic.name}
 												</TableCell>
 												<TableCell className="text-right">
-													{String(topic.createdAt)}
+													{String(topic.createdAt).slice(0, 10)}
 												</TableCell>
 												<TableCell className="text-right">
-													{String(topic.updatedAt)}
+													{String(topic.updatedAt).slice(0, 10)}
 												</TableCell>
 											</TableRow>
 										))}
@@ -135,7 +146,7 @@ const Classroom = () => {
 								</div>
 							</CardFooter>
 						</Card>
-						<Card>
+						<Card className="h-fit max-h-full">
 							<CardHeader>
 								<CardTitle>{classroom?.name}</CardTitle>
 								{/* <CardDescription>Card Description</CardDescription> */}
@@ -154,16 +165,16 @@ const Classroom = () => {
 									</TableHeader>
 									<TableBody>
 										{classroom?.topics?.map((topic) =>
-											topic.quizzes.map((quiz) => (
+											topic?.quizzes?.map((quiz) => (
 												<TableRow key={topic.id}>
 													<TableCell className="font-medium">
 														{quiz.name}
 													</TableCell>
 													<TableCell className="text-right">
-														{String(quiz.createdAt)}
+														{String(quiz.createdAt).slice(0, 10)}
 													</TableCell>
 													<TableCell className="text-right">
-														{String(quiz.updatedAt)}
+														{String(quiz.updatedAt).slice(0, 10)}
 													</TableCell>
 												</TableRow>
 											))
@@ -174,26 +185,37 @@ const Classroom = () => {
 							<CardFooter>
 								<div className="flex justify-between w-full">
 									<p>Quizes</p>
-									<Popover>
-										<PopoverTrigger>
-											<Button>New quiz</Button>
-										</PopoverTrigger>
-										<PopoverContent>
-											Place content for the popover here.
-										</PopoverContent>
-									</Popover>
+									<DropdownMenu>
+										<DropdownMenuTrigger>
+											<Button>New</Button>
+										</DropdownMenuTrigger>
+										<DropdownMenuContent>
+											<DropdownMenuLabel>Pick Topic</DropdownMenuLabel>
+											<DropdownMenuSeparator />
+											{classroom?.topics?.map((topic) => (
+												<Link to={topic.id} key={topic.id}>
+													<DropdownMenuItem >{topic.name}</DropdownMenuItem>
+												</Link>
+											))}
+										</DropdownMenuContent>
+									</DropdownMenu>
 								</div>
 							</CardFooter>
 						</Card>
 					</div>
 					<div className="self-end">
-						<Popover open={openPopover2} onOpenChange={setOpenPopover2}>
+						<Popover
+							open={delClassOpenPopover}
+							onOpenChange={setDelClassOpenPopover}
+						>
 							<PopoverTrigger>
 								<Button>Delete class</Button>
 							</PopoverTrigger>
 							<PopoverContent>
 								<div className="flex justify-between">
-									<Button onClick={() => setOpenPopover2(false)}>Cancel</Button>
+									<Button onClick={() => setDelClassOpenPopover(false)}>
+										Cancel
+									</Button>
 									<Button onClick={deleteClass}>Delete</Button>
 								</div>
 							</PopoverContent>

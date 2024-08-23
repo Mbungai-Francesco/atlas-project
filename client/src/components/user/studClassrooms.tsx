@@ -1,5 +1,6 @@
 import { ClassRoom, User } from "@/types";
 import { useEffect, useState } from "react";
+import { getClassrooms as apiGetClassrooms } from "@/api";
 import {
 	Card,
 	CardContent,
@@ -10,69 +11,83 @@ import {
 } from "@/components/ui/card";
 import { useDependencyContext } from "@/hooks/useDependencyContext";
 
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Plus } from "lucide-react";
+import { getUser, updateUser } from "@/api";
+
 const StudentClassrooms = () => {
 	const [user, setUser] = useState<User>();
-	const { classState, classDispatch } = useDependencyContext();
+	const { classState, classDispatch, dispatch } = useDependencyContext();
 	const { classes } = classState;
+	const [otherClasses, setOtherClasses] = useState<ClassRoom[]>();
 	const id = JSON.parse(localStorage.getItem("userId") || "");
 
-	const getClassrooms = (classes: ClassRoom[], ids: string[]) => {
-		const outClasses: ClassRoom[] = [];
-		for (const item of classes) {
+	const getNewClass = (vals: string) => {
+		// console.log(vals);
+
+		if (id && user) {
+			user.classroomId = []
+			user.classroomId.push(vals);
+			updateUser(id, user).then((inres) => {
+				console.log(inres);
+				if (inres) {
+					dispatch({ type: "SET_USER", payload: inres });
+					setUser(inres);
+				} else return null;
+			});
+		}
+	};
+
+	const getClassrooms = (Classes: ClassRoom[], ids: string[]) => {
+		const inClasses: ClassRoom[] = [];
+		const outClasses = Classes;
+		console.log("ids", ids);
+		console.log("Classes", Classes);
+		for (const item of Classes) {
+			console.log(item.name);
 			for (const ele of ids) {
-				if (item.id === ele) {
-					outClasses.push(item);
-					console.log(item);
-					console.log(classes);
+				// console.log(`${item.id} == ${ele}, ${item.id == ele}`);
+				if (item.id == ele) {
+					inClasses.push(item);
+					outClasses.splice(outClasses.indexOf(item), 1);
 				}
 			}
 		}
-		classDispatch({ type: "SET_CLASS", payload: outClasses });
+		console.log("inClasses", inClasses);
+		setOtherClasses(outClasses);
+		classDispatch({ type: "SET_CLASS", payload: inClasses });
 		// console.log(outClasses);
 		// return outClasses;
 	};
 
-	useEffect(()=>{
+	useEffect(() => {
 		const GetClassrooms = async () => {
-			try {
-				const response = await fetch(`http://localhost:5000/api/classrooms`);
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+			apiGetClassrooms().then((res) => {
+				if (res && user) {
+					getClassrooms(res, user?.classroomId);
 				}
-				if (response.ok) {
-					const data: ClassRoom[] = await response.json();
-					console.log(data);
-					if (user) {
-						getClassrooms(data, user?.classroomId);
-					}
-				}
-			} catch (error) {
-				console.log(error);
-			}
+			});
 		};
-		if(user){
+		if (user) {
 			GetClassrooms();
 		}
 		console.log(classes);
-		
-	}, [user])
+	}, [user]);
 
 	useEffect(() => {
 		const GetUser = async () => {
-			try {
-				console.log("id", id);
-				const response = await fetch(`http://localhost:5000/api/users/${id}`);
-				if (!response.ok) {
-					throw new Error("Network response was not ok");
+			getUser(id).then((res) => {
+				if (res) {
+					setUser(res);
 				}
-				if (response.ok) {
-					const data = await response.json();
-					console.log(data);
-					setUser(data);
-				}
-			} catch (error) {
-				console.log(error);
-			}
+			});
 		};
 		if (id) {
 			console.log("id", id);
@@ -90,21 +105,46 @@ const StudentClassrooms = () => {
 					<CardTitle>my Classrooms</CardTitle>
 					<CardDescription>A step at a time, you'll get there</CardDescription>
 				</CardHeader>
-				{
-					<CardContent className="flex space-x-4">
-						<p className={classes.length == 0 ? "block" : "hidden"}>
-							loading ...
-						</p>
-						{classes.map((classin) => (
-							<Card key={classin.id}>
+				<CardContent className="flex space-x-4">
+					{
+						<>
+							<p className={classes.length == 0 ? "block" : "hidden"}>
+								loading ...
+							</p>
+							{classes.map((classin) => (
+								<Card key={classin.id}>
+									<CardHeader>
+										<CardTitle>{classin.name}</CardTitle>
+										<CardDescription>
+											topics {classin.topics ? classin.topics.length : "0"}
+										</CardDescription>
+									</CardHeader>
+								</Card>
+							))}
+						</>
+					}
+
+					<DropdownMenu>
+						<DropdownMenuTrigger>
+							<Card aria-placeholder="moon">
 								<CardHeader>
-									<CardTitle>{classin.name}</CardTitle>
-									<CardDescription>topics {classin.topics ? classin.topics.length  : "0"}</CardDescription>
+									<CardTitle>
+										<Plus />
+									</CardTitle>
 								</CardHeader>
 							</Card>
-						))}
-					</CardContent>
-				}
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuLabel>Classrooms</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							{otherClasses?.map((classOut) => (
+								<DropdownMenuItem onClick={() => getNewClass(classOut.id)}>
+									{classOut.name}
+								</DropdownMenuItem>
+							))}
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</CardContent>
 				<CardFooter></CardFooter>
 			</Card>
 		</>

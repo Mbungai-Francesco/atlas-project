@@ -1,5 +1,5 @@
 import ClassRoom from "./classRoom"
-import Topic from "./topic"
+import Quiz from "./quiz"
 import User from "./user"
 
 export interface UserState{
@@ -18,10 +18,11 @@ export interface ClassAction {
   payload: ClassRoom | ClassRoom[]
 }
 
-export interface TopicState{
-  topics: Topic[]
+export interface QuizState{
+  quiz: Quiz
 }
-export interface TopicAction {
+export interface QuizAction {
   type: string,
-  payload: Topic | Topic[]
+  num: number,
+  payload: Quiz
 }

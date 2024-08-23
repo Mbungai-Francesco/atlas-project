@@ -13,6 +13,7 @@ import StudentClassrooms from "./components/user/studClassrooms";
 import ClassRoom from "./components/teacher/classroom/classroom";
 import ClassRooms from "./components/teacher/classroom/classrooms";
 import Login from "./components/shared/login";
+import CreateQuiz from "./components/teacher/classroom/createQuiz";
 
 const App = () => {
 	const { userId } = useAuth();
@@ -33,7 +34,11 @@ const App = () => {
 							<Route path="/myStudents" element={<Student />} />
 							<Route path="/classrooms">
 								<Route index element={<ClassRooms />} />
-								<Route path="classroom/:classID" element={<ClassRoom />} />
+								<Route path=":classID" >
+									<Route index element={<ClassRoom />} />
+									<Route path=":topicID" element={<CreateQuiz />} />
+								</Route>
+								{/* <Route path="classroom/:classID" element={<ClassRoom />} /> */}
 							</Route>
 							<Route path="/myClassrooms" element={<StudentClassrooms />} />
 							<Route path="/about" element={<About />} />
