@@ -10,6 +10,7 @@ import TopicRoutes from '../routes/TopicRoutes';
 import Adminrouter from '../routes/AdminRoutes';
 // import StudentInClassRoutes from '../routes/StudetnInClassRoutes';
 import cors from 'cors';
+import TopicContentRouter from '../routes/TopicContentRoutes';
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use(
   QuizRoutes,
   TopicRoutes,
   Adminrouter,
+  TopicContentRouter,
   // StudentInClassRoutes,
 );
 
