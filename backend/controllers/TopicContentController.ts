@@ -46,10 +46,10 @@ export const CreateContent = async (req: Request, res: Response) => {
         .json({ message: 'topic not found, provide a correct topic ID' });
     }
 
-    contentToCreate[topicId] = topicId;
+    contentToCreate['topicId'] = topicId;
 
     if (contenttpye && contenttpye !== 'PDF') {
-      contentToCreate[contenttpye] = contenttpye;
+      contentToCreate['contenttpye'] = contenttpye;
     }
 
     if (!content) {
@@ -62,7 +62,7 @@ export const CreateContent = async (req: Request, res: Response) => {
       return res.status(400).json({ message: 'invalid cloudinary url' });
     }
 
-    contentToCreate[content] = content;
+    contentToCreate['content'] = content;
 
     const CreateContent = await db.topicContent.create({
       data: {
@@ -78,6 +78,86 @@ export const CreateContent = async (req: Request, res: Response) => {
       message: 'topic content created successfully',
       data: CreateContent,
     });
+  } catch (error: any) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const UpdateContent = async (req: Request, res: Response) => {
+  try {
+    const auth = req.headers.authorization?.split(' ')[1];
+
+    if (!auth) {
+      return res
+        .status(400)
+        .json({ message: 'missing teacher authorization header' });
+    }
+
+    const { id } = req.params;
+
+    if (!id) {
+      return res
+        .status(400)
+        .json({ message: 'missing topic content id as parameters' });
+    }
+
+    const topicContent = await db.topicContent.findUnique({ where: { id } });
+
+    if (!topicContent) {
+      return res.status(400).json({ message: 'Topic content not found' });
+    }
+
+    const findTeacher = await db.teacher.findUnique({
+      where: {
+        clerkId: auth,
+      },
+    });
+
+    if (!findTeacher) {
+      return res.status(404).json({ message: 'Teacher not found' });
+    }
+
+    const { topicId, contenttype, content } = req.body;
+    const toUpdate: any = {};
+
+    if (topicId) {
+      if (!(await db.topic.findUnique({ where: { id: topicId } }))) {
+        return res.status(404).json({ message: 'Topic not found' });
+      }
+
+      if (topicId !== topicContent.topicId) {
+        toUpdate['topicId'] = topicId;
+      }
+    }
+
+    if (contenttype && contenttype !== topicContent.contenttpye) {
+      toUpdate['contenttype'] = contenttype;
+    }
+
+    if (content && content !== topicContent.content) {
+      if (!extractPublicId(content)) {
+        return res.status(400).json({ message: 'invalid url for content' });
+      }
+
+      toUpdate['content'] = content;
+    }
+
+    const update = db.topicContent.update({
+      where: {
+        id,
+      },
+      data: {
+        ...toUpdate,
+      },
+    });
+
+    if (!update) {
+      return res.status(500).json({ message: 'topic content not updated' });
+    }
+
+    return res
+      .status(200)
+      .json({ message: 'topic content updated successfully', data: update });
   } catch (error: any) {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
