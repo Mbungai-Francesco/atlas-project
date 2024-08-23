@@ -162,3 +162,39 @@ export const UpdateContent = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Internal Server Error' });
   }
 };
+
+export const GetTopicContents = async (req: Request, res: Response) => {
+  try {
+    const topicContents = await db.topicContent.findMany();
+
+    if (!topicContents) {
+      return res.status(404).json({ message: 'no topic content found' });
+    }
+
+    return res.status(200).json(topicContents);
+  } catch (error: any) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+export const GetTopicContent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({ message: 'missing topic content id' });
+    }
+
+    const topicContent = await db.topicContent.findUnique({
+      where: { id },
+    });
+
+    if (!topicContent) {
+      return res.status(404).json({ message: 'topic content not found' });
+    }
+
+    return res.status(200).json(topicContent);
+  } catch (error: any) {
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
