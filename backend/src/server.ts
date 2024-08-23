@@ -39,5 +39,5 @@ app.get('*', (req: Request, res: Response) => {
 });
 
 app.listen(5000, () => {
-  console.log('server running on port 5000 : http://localhost:5000');
+  console.log('server running on port 5000 : https://atlas-2jg5.onrender.com/');
 });
