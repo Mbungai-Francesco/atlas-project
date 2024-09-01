@@ -7,8 +7,10 @@ import Classroomroutes from '../routes/ClassroomRoutes';
 import LoginRoutes from '../routes/Login';
 import QuizRoutes from '../routes/QuizRoutes';
 import TopicRoutes from '../routes/TopicRoutes';
+import Adminrouter from '../routes/AdminRoutes';
 // import StudentInClassRoutes from '../routes/StudetnInClassRoutes';
 import cors from 'cors';
+import TopicContentRouter from '../routes/TopicContentRoutes';
 
 const app = express();
 
@@ -27,6 +29,8 @@ app.use(
   LoginRoutes,
   QuizRoutes,
   TopicRoutes,
+  Adminrouter,
+  TopicContentRouter,
   // StudentInClassRoutes,
 );
 
@@ -35,5 +39,7 @@ app.get('*', (req: Request, res: Response) => {
 });
 
 app.listen(5000, () => {
-  console.log('server running on port 5000 : http://localhost:5000');
+  console.log(
+    'server running on port 5000 : \nlocalhost: http://localhost:5000 \ndeployed: https://atlas-2jg5.onrender.com/',
+  );
 });

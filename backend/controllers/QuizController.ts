@@ -275,6 +275,7 @@ export const GetQuiz = async (req: Request, res: Response) => {
       },
     });
 
+    // checking quiz
     if (!quiz) {
       return res.status(404).json({ message: 'Quiz not found' });
     }

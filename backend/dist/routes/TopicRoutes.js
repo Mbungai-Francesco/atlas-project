@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const TopicController_1 = require("../controllers/TopicController");
+const TopicRoutes = (0, express_1.Router)();
+TopicRoutes.get('/topics', TopicController_1.GetTopics);
+TopicRoutes.get('/topics/:id', TopicController_1.GetTopic);
+TopicRoutes.post('/topics', TopicController_1.CreateTopic);
+TopicRoutes.put('/topics/:id', TopicController_1.UpdateTopic);
+TopicRoutes.delete('/topics/:id', TopicController_1.DeleteTopic);
+exports.default = TopicRoutes;

@@ -4,11 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-const port = 3000;
-app.get('/', (req, res) => {
-    res.send('Hello + Node.js + Express! with typscript and some updates');
-});
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+const Login_1 = require("../controllers/Login");
+const LoginRoutes = express_1.default.Router();
+LoginRoutes.post('/login', Login_1.Login);
+exports.default = LoginRoutes;
