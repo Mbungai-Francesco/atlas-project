@@ -4,7 +4,7 @@ import Topic from "./topic"
 
 interface Quiz {
   id        :string,     //@id @default(auto()) @map("_id") @db.ObjectId
-  name      :string,
+  title      :string,
   topicId   :string,     //@db.ObjectId
   topic     :Topic,      //@relation(fields: [topicId], references: [id], onDelete: Cascade)
   questions :Question[],

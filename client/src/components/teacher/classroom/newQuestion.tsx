@@ -2,21 +2,19 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { number, z } from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
-	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import NewOption from "./newOption";
-import { Quiz } from "@/types";
+import { Question, Quiz } from "@/types";
 import { useRef, useState } from "react";
 
 import {
@@ -26,7 +24,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { getQuizzes } from "@/api";
 
 const formSchema = z.object({
 	question: z.string().min(2, {
@@ -40,14 +37,16 @@ const formSchema = z.object({
 });
 
 interface questionProps {
+	title: string | null;
 	num: number;
-	qQuiz: Quiz | undefined;
+	qQuiz: Quiz;
 	updatedQuiz: (quiz: Quiz) => void;
 }
 
-const NewQuestion = ({ num, qQuiz, updatedQuiz }: questionProps) => {
-	let emoptyQuiz: Quiz;
+const NewQuestion = ({ title, num, qQuiz, updatedQuiz }: questionProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
+	const [ question, setQuestion ] = useState<Question>({});
+	const [ options, setOptions ] = useState<string[]>([]);
 
 	// 1. Define your form.
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -64,26 +63,28 @@ const NewQuestion = ({ num, qQuiz, updatedQuiz }: questionProps) => {
 		console.log(values);
 	}
 
-	const inputHandler = () => {
+	const questionTextHandler = () => {
 		const val: string = inputRef.current?.value || "";
-		console.log(val);
-		console.log(qQuiz);
-		emoptyQuiz.questions[num].question = val;
-		console.log(emoptyQuiz);
-		
-		if (qQuiz) {
-			console.log(qQuiz);
-			qQuiz.questions[num].question = val;
+		if(val){
+			question['question'] = val;
+			setQuestion(question);
+
+			qQuiz['questions']= [question]
+			console.log(qQuiz);	
 			updatedQuiz(qQuiz);
 		}
-	};
+	}
+
+	const updateOption = (val: string) =>{
+		setOptions([...options, val])
+	}
 
 	return (
 		<>
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex">
 					<div className="w-full">
-						<div className="flex justify-between">
+						<div className={qQuiz?.title? "flex justify-between" : "hidden"}>
 							<div className="w-4/5">
 								<FormField
 									control={form.control}
@@ -102,14 +103,16 @@ const NewQuestion = ({ num, qQuiz, updatedQuiz }: questionProps) => {
 									)}
 								/>
 							</div>
-							<Button className="m-0" type="button" onClick={inputHandler}>Submit</Button>
+							<Button className="m-0" type="button" onClick={questionTextHandler}>Submit</Button>
 						</div>
 
 						<div className="flex space-x-2 items-center">
-							<NewOption />
-							<Button type="submit" className="m-0">
-								Submit
-							</Button>
+							{options.map((option, index) => (
+								<div key={index} className="flex flex-row items-start space-x-3 space-y-0">
+									<p>{option}</p>
+								</div>
+							))}
+							<NewOption updatedOptions={updateOption}/>
 						</div>
 						<FormField
 							control={form.control}
@@ -121,7 +124,7 @@ const NewQuestion = ({ num, qQuiz, updatedQuiz }: questionProps) => {
 											<SelectValue placeholder="Select an answer" />
 										</SelectTrigger>
 										<SelectContent>
-											{qQuiz?.questions[num].options.map((item) => (
+											{options?.map((item) => (
 												<FormField
 													key={item}
 													control={form.control}
@@ -134,7 +137,7 @@ const NewQuestion = ({ num, qQuiz, updatedQuiz }: questionProps) => {
 															>
 																<FormControl>
 																	<SelectItem
-																		value="dark"
+																		value={item}
 																		onClick={() =>
 																			field.onChange([...field.value, item])
 																		}

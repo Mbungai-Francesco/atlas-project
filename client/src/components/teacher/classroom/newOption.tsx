@@ -7,53 +7,69 @@ import { z } from "zod";
 import {
 	Form,
 	FormControl,
+	FormDescription,
 	FormField,
 	FormItem,
+	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
-const formSchema = z.object({
+const optionSchema = z.object({
 	option: z.string().min(2, {
-		message: "Username must be at least 2 characters.",
+		message: "Option must be at least 2 characters.",
 	}),
 });
 
-const NewOption = () => {
+interface NewOptionProps {
+	updatedOptions: (option: string) => void;
+}
+
+const NewOption = ({updatedOptions}: NewOptionProps) => {
 	// 1. Define your form.
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
-		defaultValues: {
-			option: "",
-		},
+	const optionForm = useForm<z.infer<typeof optionSchema>>({
+		resolver: zodResolver(optionSchema),
 	});
 
 	// 2. Define a submit handler.
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	function onSubmit(values: z.infer<typeof optionSchema>) {
 		// Do something with the form values.
 		// ✅ This will be type-safe and validated.
 		console.log(values);
 	}
 
+	const addOption = () => {
+		const option = optionForm.getValues("option");
+		if(option) {
+			updatedOptions(option);
+			optionForm.resetField('option');
+		}
+	}
+
 	return (
 		<>
-			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center py-2">
-					<div className="">
-						<FormField
-							control={form.control}
-							name="option"
-							render={({ field }) => (
-								<FormItem>
-									<FormControl>
-										<Input placeholder="option" {...field} />
+			<Form {...optionForm}>
+				<form onSubmit={optionForm.handleSubmit(onSubmit)}>
+					<FormField
+						control={optionForm.control}
+						name="option"
+						render={({ field }) => (
+							<FormItem>
+								<div className="flex space-x-4 ">
+									<FormControl className="w-4/5">
+										<Input
+											placeholder="Quiz title"
+											{...field}
+											className="w-full"
+										/>
 									</FormControl>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-					</div>
-					
+									<Button type="button" onClick={addOption}>Submit</Button>
+								</div>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 				</form>
 			</Form>
 		</>

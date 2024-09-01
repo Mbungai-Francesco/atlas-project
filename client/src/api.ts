@@ -1,5 +1,5 @@
 import axios from "axios"
-import { ClassRoom, Quiz, Teacher, Topic, User, UserType } from "./types"
+import { ClassRoom, Question, Quiz, Teacher, Topic, User, UserType } from "./types"
 
 interface topicProps{
   name: string,
@@ -106,14 +106,14 @@ export const getMyClassrooms = async (clerkId: string) =>{
   }
 }
 
-export const newQuiz = async (clerkId: string, title: string, topicId: string ) =>{
+export const newQuiz = async (clerkId: string, title: string, topicId: string,questions: Question[] ) =>{
   try{
     const config = {
       headers: {
         authorization: `Bearer ${clerkId}`
       }
     }
-    const res = await axios.post(`http://localhost:5000/api/quizzes`,{ title, topicId},config)
+    const res = await axios.post(`http://localhost:5000/api/quizzes`,{ title, topicId,questions},config)
     if(res.status === 201){
       console.log("message", res.statusText);
       console.log(res.data.data);
@@ -277,3 +277,4 @@ export const getUser = async (userId: string) => {
     console.error('Error:', error);
   }
 }
+
